@@ -1,0 +1,77 @@
+.profile {
+    height: 120px;
+    display: flex;
+    align-items: center;
+}
+
+.profile__avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+
+.profile__image {
+    width: 168.75px;
+    height: 127.5px;
+}
+
+.profile__info {
+    margin-left: 28.125px;
+}
+
+.profile__heading {
+    display: flex;
+    align-items: center;
+    margin: 25.75px 0 0;
+}
+
+.profile__name {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 42px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 48px;
+    margin: 0;
+}
+
+.profile__description {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 16px 0 0;
+}
+
+.profile__edit-button {
+    height: 24px;
+    width: 24px;
+    background: url('../images/Edit\ Button.svg') no-repeat;
+    cursor: pointer;
+    border: none;
+    margin-left: 18px;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile__edit-button:hover {
+    opacity: 0.5;
+}
+
+.profile__add-button {
+    height: 50px;
+    width: 150px;
+    background: url('../images/Add\ Button.svg') no-repeat;
+    cursor: pointer;
+    border: none;
+    margin-left: auto;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile__add-button:hover {
+    opacity: 0.6;
+}

@@ -1,0 +1,11 @@
+.page {
+    min-width: 1280px;
+    min-height: 1217px;
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
