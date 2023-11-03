@@ -1,5 +1,5 @@
 .page {
-    min-width: 1280px;
+    max-width: 100vw;
     min-height: 1217px;
     background-color: #000;
     background-size: cover;
@@ -8,4 +8,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+
+@media screen and (min-width: 800px) and (max-width: 1280px) {
+    .page {
+        max-width: 100vw;
+    }
+}
+
+@media screen and (min-width: 320px) and (max-width: 800px) {
+    .page {
+        max-width: 100vw;
+    }
 }
