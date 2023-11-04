@@ -1,6 +1,6 @@
 .header {
     width: 880px;
-    height: 74px;
+    min-height: 74px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -9,15 +9,17 @@
     padding: 45px 0 0;
 }
 
-.header__logo {
-    width: 173px;
-    height: 33px;
-}
-
-.header__line {
+.header::after
+{
     border-bottom: 1px solid #545454;
     width: 100%;
     opacity: 0.7;
+    content: "";
+}
+
+.header__logo {
+    width: 173px;
+    height: 33px;
 }
 
 @media screen and (min-width: 800px) and (max-width: 1280px) {
