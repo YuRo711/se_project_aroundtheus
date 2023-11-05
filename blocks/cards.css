@@ -6,3 +6,9 @@
     column-gap: 17px;
     justify-content: center;
 }
+
+@media screen and (min-width: 320px) and (max-width: 800px) {
+    .cards {
+        margin-top: 36px;
+    }
+}
