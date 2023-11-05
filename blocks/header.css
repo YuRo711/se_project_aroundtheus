@@ -33,7 +33,13 @@
         max-width: 100%;
     }
 
+    .header::after {
+        width: 99%;
+    }
+
     .header__logo {
         margin-left: 10%;
+        width: 126px;
+        height: 24px; 
     }
 }
