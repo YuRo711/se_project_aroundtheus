@@ -13,6 +13,27 @@
   </head>
   <body>
     <div class="page">
+      <div class="modal">
+        <div class="modal__container">
+          <button class="modal__close-button" type="button"></button>
+          <h2 class="modal__heading">Edit profile</h2>
+          <form class="modal__form">
+            <fieldset class="modal__fieldset">
+              <input type="text"
+                class="modal__input"
+                placeholder="Name"
+              >
+              <input type="text"
+                class="modal__input"
+                placeholder="Description"
+              >
+            </fieldset>
+            <button class="modal__save-button" type="submit">
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
       <header class="header">
         <img class="header__logo"
           src="./images/logo.svg"

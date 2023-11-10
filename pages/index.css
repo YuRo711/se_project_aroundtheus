@@ -7,6 +7,7 @@
 @import url('../blocks/profile.css');
 @import url('../blocks/card.css');
 @import url('../blocks/footer.css');
+@import url('../blocks/modal.css');
 
 body {
     background-color: #000;
