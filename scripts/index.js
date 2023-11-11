@@ -1,4 +1,4 @@
-let initialCards = [
+const initialCards = [
     {
         name: "Yosemite Valley",
         link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/yosemite.jpg",
@@ -25,23 +25,23 @@ let initialCards = [
     },
 ];
 
-let editButton = document.querySelector(".profile__edit-button");
-let closeButton = document.querySelector(".modal__close-button");
-let saveButton = document.querySelector(".modal__save-button");
+const editButton = document.querySelector(".profile__edit-button");
+const closeButton = document.querySelector(".modal__close-button");
 editButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
-saveButton.addEventListener("click", updateInfo);
 
-let modal = document.querySelector(".modal");
-let inputFields = modal.querySelectorAll(".modal__input");
-let nameInput = inputFields[0];
-let descInput = inputFields[1];
-let nameText = document.querySelector(".profile__name");
-let descText = document.querySelector(".profile__description");
+const form = document.querySelector(".modal__form");
+form.addEventListener("submit", updateInfo);
 
-let cards = document.querySelector(".cards");
+const modal = document.querySelector(".modal");
+const nameInput = document.querySelector(".modal__input_type_name");
+const descInput = document.querySelector(".modal__input_type_description");
+const nameText = document.querySelector(".profile__name");
+const descText = document.querySelector(".profile__description");
+
+const cards = document.querySelector(".cards");
 for(data of initialCards) {
-    let card = getCardElement(data);
+    const card = getCardElement(data);
     cards.appendChild(card);
 }
 
@@ -49,6 +49,8 @@ for(data of initialCards) {
 
 function openModal() {
     modal.classList.add("modal_opened");
+    nameInput.value = nameText.textContent;
+    descInput.value = descInput.textContent;
 }
 
 function closeModal() {
@@ -63,11 +65,12 @@ function updateInfo(event) {
 }
 
 function getCardElement(data) {
-    let name = data.name;
-    let image = data.link;
-    let template = document.getElementById("card");
-    let card = template.content.cloneNode(true);
+    const name = data.name;
+    const image = data.link;
+    const template = document.getElementById("card");
+    const card = template.content.cloneNode(true);
     card.querySelector(".card__image").setAttribute("src", image);
+    card.querySelector(".card__image").setAttribute("alt", name);
     card.querySelector(".card__title").textContent = name;
     return card;
 }

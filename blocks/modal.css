@@ -93,3 +93,28 @@
 .modal__save-button:hover {
     opacity: 0.6;
 }
+
+@media screen and (min-width: 320px) and (max-width: 800px) {
+    .modal__container {
+        width: 282px;
+        height: 322px; 
+        padding: 25px 22px;
+    }
+
+    .modal__close-button {
+        height: 26px;
+        width: 26px;
+        left: 256px;
+        bottom: 335px; 
+    }
+
+    .modal__heading {
+        font-size: 18px; 
+    }
+
+    .modal__save-button {
+        font-size: 14px;
+        width: 238px;
+        height: 46px; 
+    }
+}
