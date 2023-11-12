@@ -30,7 +30,8 @@ const closeButton = document.querySelector(".modal__close-button");
 editButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
 
-const form = document.querySelector(".modal__form");
+
+const form = document.forms["profile-form"];
 form.addEventListener("submit", updateInfo);
 
 const modal = document.querySelector(".modal");
@@ -50,7 +51,7 @@ for(data of initialCards) {
 function openModal() {
     modal.classList.add("modal_opened");
     nameInput.value = nameText.textContent;
-    descInput.value = descInput.textContent;
+    descInput.value = descText.textContent;
 }
 
 function closeModal() {
@@ -69,8 +70,9 @@ function getCardElement(data) {
     const image = data.link;
     const template = document.getElementById("card");
     const card = template.content.cloneNode(true);
-    card.querySelector(".card__image").setAttribute("src", image);
-    card.querySelector(".card__image").setAttribute("alt", name);
+    const cardImage = card.querySelector("card__image");
+    cardImage.setAttribute("src", image);
+    cardImage.setAttribute("alt", name);
     card.querySelector(".card__title").textContent = name;
     return card;
 }
