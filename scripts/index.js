@@ -25,20 +25,21 @@ const initialCards = [
     },
 ];
 
+const modal = document.querySelector(".modal");
+const nameInput = document.querySelector(".modal__input_type_name");
+const descInput = document.querySelector(".modal__input_type_description");
+const nameText = document.querySelector(".profile__name");
+const descText = document.querySelector(".profile__description");
+
 const editButton = document.querySelector(".profile__edit-button");
 const closeButton = document.querySelector(".modal__close-button");
 editButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
 
 
-const form = document.forms["profile-form"];
+const form = document.forms["#modal-form"];
 form.addEventListener("submit", updateInfo);
 
-const modal = document.querySelector(".modal");
-const nameInput = document.querySelector(".modal__input_type_name");
-const descInput = document.querySelector(".modal__input_type_description");
-const nameText = document.querySelector(".profile__name");
-const descText = document.querySelector(".profile__description");
 
 const cards = document.querySelector(".cards");
 for(data of initialCards) {
@@ -70,7 +71,7 @@ function getCardElement(data) {
     const image = data.link;
     const template = document.getElementById("card");
     const card = template.content.cloneNode(true);
-    const cardImage = card.querySelector("card__image");
+    const cardImage = card.querySelector(".card__image");
     cardImage.setAttribute("src", image);
     cardImage.setAttribute("alt", name);
     card.querySelector(".card__title").textContent = name;
