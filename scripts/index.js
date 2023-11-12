@@ -37,7 +37,7 @@ editButton.addEventListener("click", openModal);
 closeButton.addEventListener("click", closeModal);
 
 
-const form = document.forms["#modal-form"];
+const form = document.forms["modal-form"];
 form.addEventListener("submit", updateInfo);
 
 
