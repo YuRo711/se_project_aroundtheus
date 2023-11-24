@@ -7,7 +7,7 @@
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     transition: display 0s, opacity 0.3s linear;
 }
@@ -69,7 +69,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal; 
+    line-height: normal;
     font-family: 'Inter', Arial, sans-serif;
 }
 
@@ -89,7 +89,7 @@
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal; 
+    line-height: normal;
     cursor: pointer;
     transition: opacity 0.3s ease-in-out;
 }
@@ -112,7 +112,7 @@
 @media screen and (min-width: 320px) and (max-width: 800px) {
     .modal__container {
         width: 282px;
-        height: 322px; 
+        height: 322px;
         padding: 25px 22px;
     }
 
