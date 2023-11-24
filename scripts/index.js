@@ -29,19 +29,18 @@ const initialCards = [
 
 // #endregion
 
-// #region Edit modal setup
+// #region Edit profile modal setup
 
-var editModal = document.querySelector("#edit-modal")
+const editModal = document.querySelector("#edit-modal")
 const nameInput = editModal.querySelector(".modal__input_type_name");
 const descInput = editModal.querySelector(".modal__input_type_description");
 const nameText = document.querySelector(".profile__name");
 const descText = document.querySelector(".profile__description");
 
-const editButton = document.querySelector(".profile__edit-button");
+const editProfileButton = document.querySelector(".profile__edit-button");
 const editCloseButton = editModal.querySelector(".modal__close-button");
-editButton.addEventListener("click", openEditModal);
-editCloseButton.addEventListener("click", closeEditModal);
-
+editProfileButton.addEventListener("click", openEditModal);
+editCloseButton.addEventListener("click", closeModal.bind(event, editModal));
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
 
@@ -49,14 +48,14 @@ editForm.addEventListener("submit", updateInfo);
 
 // #region New place modal setup
 
-var placeModal = document.querySelector("#place-modal")
+const placeModal = document.querySelector("#place-modal")
 const titleInput = placeModal.querySelector(".modal__input_type_title");
 const imageInput = placeModal.querySelector(".modal__input_type_image");
 
 const placeButton = document.querySelector(".profile__add-button");
 const placeCloseButton = placeModal.querySelector(".modal__close-button");
-placeButton.addEventListener("click", openPlaceModal);
-placeCloseButton.addEventListener("click", closePlaceModal);
+placeButton.addEventListener("click", openModal.bind(event, placeModal));
+placeCloseButton.addEventListener("click", closeModal.bind(event, placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
@@ -69,7 +68,7 @@ const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
-imageCloseButton.addEventListener("click", closeCard);
+imageCloseButton.addEventListener("click", closeModal.bind(event, imageModal));
 
 // #endregion 
 
@@ -77,6 +76,7 @@ imageCloseButton.addEventListener("click", closeCard);
 // #region Cards rendering
 
 const cards = document.querySelector(".cards");
+const cardTemplate = document.getElementById("card");
 initialCards.forEach((data) => {
     const card = getCardElement(data);
     cards.append(card);
@@ -85,16 +85,31 @@ initialCards.forEach((data) => {
 // #endregion 
 
 
+// #region Universal modal methods
+
+function openModal(modal)
+{
+    modal.classList.add("modal_opened");
+}
+
+function closeModal(modal)
+{
+    modal.classList.remove("modal_opened");
+}
+
+// #endregion
+
 // #region Edit modal methods
 
 function openEditModal() {
-    editModal.classList.add("modal_opened");
-    nameInput.value = nameText.textContent;
-    descInput.value = descText.textContent;
+    fillProfileForm();
+    openModal(editModal)
 }
 
-function closeEditModal() {
-    editModal.classList.remove("modal_opened");
+function fillProfileForm()
+{
+    nameInput.value = nameText.textContent;
+    descInput.value = descText.textContent;
 }
 
 function updateInfo(event) {
@@ -108,14 +123,6 @@ function updateInfo(event) {
 
 // #region New place modal & card creation methods
 
-function openPlaceModal() {
-    placeModal.classList.add("modal_opened");
-}
-
-function closePlaceModal() {
-    placeModal.classList.remove("modal_opened");
-}
-
 function addCard(event) {
     event.preventDefault();
     const data = {
@@ -123,19 +130,20 @@ function addCard(event) {
         link: imageInput.value,
     };
     const card = getCardElement(data);
-    cards.appendChild(card);
+    cards.insertBefore(card, cards.firstChild);
+    event.target.reset();
     closePlaceModal();
 }
 
 function getCardElement(data) {
     const name = data.name;
     const image = data.link;
-    const template = document.getElementById("card");
-    const card = template.content.cloneNode(true);
+    const card = cardTemplate.content.cloneNode(true);
     const cardImage = card.querySelector(".card__image");
+    const cardTitle = card.querySelector(".card__title");
     cardImage.setAttribute("src", image);
     cardImage.setAttribute("alt", name);
-    card.querySelector(".card__title").textContent = name;
+    cardTitle.textContent = name;
     card.querySelector(".card__like-button")
         .addEventListener("click",likeCard);
     card.querySelector(".card__delete-button")
@@ -152,12 +160,7 @@ function getCardElement(data) {
 function likeCard(event)
 {
     const button = event.target;
-    if (button.classList.contains("card__like-button_active"))
-    {
-        button.classList.remove("card__like-button_active");
-    } else {
-        button.classList.add("card__like-button_active");
-    }
+    button.classList.toggle("card__like-button_active");
 }
 
 function deleteCard(event)
@@ -169,17 +172,12 @@ function deleteCard(event)
 
 function openCard(event)
 {
+    openModal(imageModal);
     const imageLink = event.target.getAttribute("src");
     const imageTitle = event.target.getAttribute("alt");
-    imageModal.classList.add("modal_opened");
     openedImage.setAttribute("src", imageLink);
     openedImage.setAttribute("alt", imageTitle);
     imageSubtitle.textContent = imageTitle;
-}
-
-function closeCard()
-{
-    imageModal.classList.remove("modal_opened");
 }
 
 // #endregion 
