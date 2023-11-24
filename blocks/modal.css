@@ -1,16 +1,20 @@
 .modal {
     position: fixed;
-    display: none;
+    display: flex;
+    visibility: hidden;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 100vh;
     z-index: 1;
     background-color: rgba(0, 0, 0, 0.5); 
+    opacity: 0;
+    transition: display 0s, opacity 0.3s linear;
 }
 
 .modal_opened {
-    display: flex;
+    visibility: visible;
+    opacity: 1;
 }
 
 .modal__container {
@@ -31,8 +35,8 @@
     width: 40px;
     height: 40px;
     position: absolute;
-    left: 430px;
-    bottom: 330px;
+    left: 100%;
+    bottom: 100%;
     cursor: pointer;
     transition: opacity 0.3s ease-in-out;
 }
@@ -92,6 +96,17 @@
 
 .modal__save-button:hover {
     opacity: 0.6;
+}
+
+.modal__image-container {
+    position: relative;
+    max-width: 75vw;
+    max-height: 75vh;
+}
+
+.modal__image {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 @media screen and (min-width: 320px) and (max-width: 800px) {

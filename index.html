@@ -13,11 +13,11 @@
   </head>
   <body>
     <div class="page">
-      <div class="modal">
+      <div class="modal" id="edit-modal">
         <div class="modal__container">
           <button class="modal__close-button" type="button"></button>
           <h2 class="modal__heading">Edit profile</h2>
-          <form class="modal__form" id="modal-form">
+          <form class="modal__form" id="edit-form">
             <fieldset class="modal__fieldset">
               <input type="text"
                 class="modal__input modal__input_type_name"
@@ -32,6 +32,33 @@
               Save
             </button>
           </form>
+        </div>
+      </div>
+      <div class="modal" id="place-modal">
+        <div class="modal__container">
+          <button class="modal__close-button" type="button"></button>
+          <h2 class="modal__heading">New place</h2>
+          <form class="modal__form" id="place-form">
+            <fieldset class="modal__fieldset">
+              <input type="text"
+                class="modal__input modal__input_type_title"
+                placeholder="Title"
+              >
+              <input type="text"
+                class="modal__input modal__input_type_image"
+                placeholder="Image link"
+              >
+            </fieldset>
+            <button class="modal__save-button" type="submit">
+              Create
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal" id="image-modal">
+        <div class="modal__image-container">
+          <img class="modal__image">
+          <button class="modal__close-button" type="button"></button>
         </div>
       </div>
       <header class="header">
@@ -65,6 +92,7 @@
       </footer>
       <template id="card">
         <article class="card">
+          <button class="card__delete-button"></button>
           <div class="card__image-wrapper">
             <img class="card__image"
               src=""
