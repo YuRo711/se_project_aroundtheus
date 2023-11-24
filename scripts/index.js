@@ -67,6 +67,7 @@ placeForm.addEventListener("submit", addCard);
 
 const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
+const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
 imageCloseButton.addEventListener("click", closeCard);
 
@@ -146,7 +147,7 @@ function getCardElement(data) {
 
 // #endregion 
 
-// #region Card intearction methods
+// #region Card interaction methods
 
 function likeCard(event)
 {
@@ -169,8 +170,11 @@ function deleteCard(event)
 function openCard(event)
 {
     const imageLink = event.target.getAttribute("src");
+    const imageTitle = event.target.getAttribute("alt");
     imageModal.classList.add("modal_opened");
     openedImage.setAttribute("src", imageLink);
+    openedImage.setAttribute("alt", imageTitle);
+    imageSubtitle.textContent = imageTitle;
 }
 
 function closeCard()
