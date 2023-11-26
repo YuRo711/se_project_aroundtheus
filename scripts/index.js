@@ -116,7 +116,7 @@ function updateInfo(event) {
     event.preventDefault();
     nameText.textContent = nameInput.value;
     descText.textContent = descInput.value;
-    closeEditModal();
+    closeModal(editModal);
 }
 
 // #endregion 
@@ -132,7 +132,7 @@ function addCard(event) {
     const card = getCardElement(data);
     cards.insertBefore(card, cards.firstChild);
     event.target.reset();
-    closePlaceModal();
+    closeModal(placeModal);
 }
 
 function getCardElement(data) {
