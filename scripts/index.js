@@ -41,8 +41,12 @@ const editProfileButton = document.querySelector(".profile__edit-button");
 const editCloseButton = editModal.querySelector(".modal__close-button");
 editProfileButton.addEventListener("click", openEditModal);
 editCloseButton.addEventListener("click", closeModal.bind(event, editModal));
+
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
+attachValidation(editForm);
+editModal.addEventListener("click", (event) => handleOverlayClick(event, editModal));
+document.addEventListener("keydown", (event) => handleKeyPress(event, editModal));
 
 // #endregion 
 
@@ -59,6 +63,9 @@ placeCloseButton.addEventListener("click", closeModal.bind(event, placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
+attachValidation(placeForm);
+placeModal.addEventListener("click", (event) => handleOverlayClick(event, placeModal));
+document.addEventListener("keydown", (event) => handleKeyPress(event, placeModal));
 
 // #endregion 
 
@@ -69,9 +76,10 @@ const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
 imageCloseButton.addEventListener("click", closeModal.bind(event, imageModal));
+imageModal.addEventListener("click", (event) => handleOverlayClick(event, imageModal));
+document.addEventListener("keydown", (event) => handleKeyPress(event, imageModal));
 
-// #endregion 
-
+// #endregion
 
 // #region Cards rendering
 
@@ -89,12 +97,98 @@ initialCards.forEach((data) => {
 
 function openModal(modal)
 {
+    const formElement = modal.querySelector(".modal__form");
+    if (formElement) {
+        const inputElements = Array.from(
+            formElement.querySelectorAll(".modal__input"));
+        const buttonElement = formElement.querySelector(".modal__save-button");
+        toggleButtonState(inputElements, buttonElement);
+    }
     modal.classList.add("modal_opened");
 }
 
 function closeModal(modal)
 {
+    const formElement = modal.querySelector(".modal__form");
+    if (formElement){
+        const inputElements = Array.from(
+            formElement.querySelectorAll(".modal__input"));
+        inputElements.forEach((inputElement) => hideInputError(formElement, inputElement));
+    }
     modal.classList.remove("modal_opened");
+}
+
+function handleOverlayClick(event, modal)
+{
+    if (event.target === modal) {
+        closeModal(modal);
+    }
+}
+
+function handleKeyPress(event, modal)
+{
+    if (event.key === "Escape") {
+        closeModal(modal);
+    }
+}
+
+// #endregion
+
+// #region Input validation methods
+
+function attachValidation(formElement)
+{
+    const inputFields = Array.from(
+        formElement.querySelectorAll(".modal__input"));
+    const buttonElement = formElement.querySelector(".modal__save-button");
+
+    inputFields.forEach((inputElement) =>
+        inputElement.addEventListener("input", 
+            () => {
+                checkInputValidity(formElement, inputElement);
+                toggleButtonState(inputFields, buttonElement);
+            }));
+}
+
+function checkInputValidity(formElement, inputElement)
+{
+    if (!inputElement.validity.valid) {
+        showInputError(formElement, inputElement, 
+            inputElement.validationMessage);
+    }
+    else {
+        hideInputError(formElement, inputElement);
+    }
+}
+
+function findInvalidInput(inputList) {
+    return inputList.some((inputElement) => {
+        return !inputElement.validity.valid;
+    });
+}
+
+function showInputError(formElement, inputElement, errorMessage) {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.add("modal__input_type_error");
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add("modal__input-error_active");
+}
+  
+function hideInputError(formElement, inputElement) {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.remove("modal__input_type_error");
+    errorElement.classList.remove("modal__input-error_active");
+    errorElement.textContent = "";
+}
+
+function toggleButtonState(inputList, buttonElement) {
+    if (findInvalidInput(inputList)) {
+        buttonElement.disabled = true;
+        buttonElement.classList.add("modal__save-button_deactivated");
+    } else {
+        buttonElement.disabled = false;
+        buttonElement.classList.remove("modal__save-button_deactivated");
+    }
 }
 
 // #endregion

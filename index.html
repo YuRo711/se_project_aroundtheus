@@ -21,11 +21,22 @@
               <input type="text"
                 class="modal__input modal__input_type_name"
                 placeholder="Name"
+                id="name-input"
+                minlength="2"
+                maxlength="40"
+                required
               >
+              <span class="modal__input-error name-input-error"></span>
+
               <input type="text"
                 class="modal__input modal__input_type_description"
                 placeholder="Description"
+                id="description-input"
+                minlength="2"
+                maxlength="200"
+                required
               >
+              <span class="modal__input-error description-input-error"></span>
             </fieldset>
             <button class="modal__save-button" type="submit">
               Save
@@ -42,11 +53,20 @@
               <input type="text"
                 class="modal__input modal__input_type_title"
                 placeholder="Title"
+                id="title-input"
+                minlength="1"
+                maxlength="30"
+                required
               >
-              <input type="text"
+              <span class="modal__input-error title-input-error"></span>
+
+              <input type="url"
                 class="modal__input modal__input_type_image"
                 placeholder="Image link"
+                id="url-input"
+                required
               >
+              <span class="modal__input-error url-input-error"></span>
             </fieldset>
             <button class="modal__save-button" type="submit">
               Create

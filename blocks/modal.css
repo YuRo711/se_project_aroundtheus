@@ -74,6 +74,10 @@
     font-family: 'Inter', Arial, sans-serif;
 }
 
+.modal__input_type_error {
+    border-color: #f00;
+}
+
 .modal__input:first-of-type {
     margin: 0;
 }
@@ -99,6 +103,13 @@
     opacity: 0.6;
 }
 
+.modal__save-button_deactivated {
+    background: #fff;
+    color: #000;
+    opacity: 0.2;
+    cursor: not-allowed;
+}
+
 .modal__image-container {
     position: relative;
     max-width: 75vw;
@@ -116,6 +127,21 @@
     font-size: 12px;
     font-weight: 400;
     line-height: 15px;
+}
+
+.modal__input-error {
+    visibility: hidden;
+    margin: 0;
+    color: #f00;
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 15px;
+    position: absolute;
+}
+
+.modal__input-error_active {
+    visibility: visible;
 }
 
 @media screen and (min-width: 320px) and (max-width: 800px) {
