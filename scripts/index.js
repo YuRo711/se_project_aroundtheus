@@ -1,3 +1,18 @@
+// #region Enable validation
+
+const config = {
+    formSelector: ".modal__form",
+    inputSelector: ".modal__input",
+    submitButtonSelector: ".modal__save-button",
+    inactiveButtonClass: "modal__save-button_deactivated",
+    inputErrorClass: "modal__input_type_error",
+    errorClass: "modal__input-error_active"
+};
+
+enableValidation();
+
+// #endregion
+
 // #region Initial cards
 
 const initialCards = [
@@ -44,7 +59,6 @@ editCloseButton.addEventListener("click", closeModal.bind(event, editModal));
 
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
-attachValidation(editForm);
 editModal.addEventListener("click", (event) => handleOverlayClick(event, editModal));
 document.addEventListener("keydown", (event) => handleKeyPress(event, editModal));
 
@@ -63,7 +77,6 @@ placeCloseButton.addEventListener("click", closeModal.bind(event, placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
-attachValidation(placeForm);
 placeModal.addEventListener("click", (event) => handleOverlayClick(event, placeModal));
 document.addEventListener("keydown", (event) => handleKeyPress(event, placeModal));
 
@@ -97,11 +110,11 @@ initialCards.forEach((data) => {
 
 function openModal(modal)
 {
-    const formElement = modal.querySelector(".modal__form");
+    const formElement = modal.querySelector(config.formSelector);
     if (formElement) {
         const inputElements = Array.from(
-            formElement.querySelectorAll(".modal__input"));
-        const buttonElement = formElement.querySelector(".modal__save-button");
+            formElement.querySelectorAll(config.inputSelector));
+        const buttonElement = formElement.querySelector(config.submitButtonSelector);
         toggleButtonState(inputElements, buttonElement);
     }
     modal.classList.add("modal_opened");
@@ -109,10 +122,10 @@ function openModal(modal)
 
 function closeModal(modal)
 {
-    const formElement = modal.querySelector(".modal__form");
+    const formElement = modal.querySelector(config.formSelector);
     if (formElement){
         const inputElements = Array.from(
-            formElement.querySelectorAll(".modal__input"));
+            formElement.querySelectorAll(config.inputSelector));
         inputElements.forEach((inputElement) => hideInputError(formElement, inputElement));
     }
     modal.classList.remove("modal_opened");
@@ -134,64 +147,6 @@ function handleKeyPress(event, modal)
 
 // #endregion
 
-// #region Input validation methods
-
-function attachValidation(formElement)
-{
-    const inputFields = Array.from(
-        formElement.querySelectorAll(".modal__input"));
-    const buttonElement = formElement.querySelector(".modal__save-button");
-
-    inputFields.forEach((inputElement) =>
-        inputElement.addEventListener("input", 
-            () => {
-                checkInputValidity(formElement, inputElement);
-                toggleButtonState(inputFields, buttonElement);
-            }));
-}
-
-function checkInputValidity(formElement, inputElement)
-{
-    if (!inputElement.validity.valid) {
-        showInputError(formElement, inputElement, 
-            inputElement.validationMessage);
-    }
-    else {
-        hideInputError(formElement, inputElement);
-    }
-}
-
-function findInvalidInput(inputList) {
-    return inputList.some((inputElement) => {
-        return !inputElement.validity.valid;
-    });
-}
-
-function showInputError(formElement, inputElement, errorMessage) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.add("modal__input_type_error");
-    errorElement.textContent = errorMessage;
-    errorElement.classList.add("modal__input-error_active");
-}
-  
-function hideInputError(formElement, inputElement) {
-    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.remove("modal__input_type_error");
-    errorElement.classList.remove("modal__input-error_active");
-    errorElement.textContent = "";
-}
-
-function toggleButtonState(inputList, buttonElement) {
-    if (findInvalidInput(inputList)) {
-        buttonElement.disabled = true;
-        buttonElement.classList.add("modal__save-button_deactivated");
-    } else {
-        buttonElement.disabled = false;
-        buttonElement.classList.remove("modal__save-button_deactivated");
-    }
-}
-
-// #endregion
 
 // #region Edit modal methods
 
