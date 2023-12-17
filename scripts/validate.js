@@ -1,28 +1,28 @@
-function enableValidation()
+function enableValidation(options)
 {
     const forms = document.forms;
     for (const formElement of forms) {
         const inputFields = Array.from(
-            formElement.querySelectorAll(config.inputSelector));
-        const buttonElement = formElement.querySelector(config.submitButtonSelector);
+            formElement.querySelectorAll(options.inputSelector));
+        const buttonElement = formElement.querySelector(options.submitButtonSelector);
 
         inputFields.forEach((inputElement) =>
             inputElement.addEventListener("input", 
                 () => {
-                    checkInputValidity(formElement, inputElement);
-                    toggleButtonState(inputFields, buttonElement);
+                    checkInputValidity(formElement, inputElement, options);
+                    toggleButtonState(inputFields, buttonElement, options);
         }));
     }
 }
 
-function checkInputValidity(formElement, inputElement)
+function checkInputValidity(formElement, inputElement, options)
 {
     if (!inputElement.validity.valid) {
         showInputError(formElement, inputElement, 
-            inputElement.validationMessage);
+            inputElement.validationMessage, options);
     }
     else {
-        hideInputError(formElement, inputElement);
+        hideInputError(formElement, inputElement, options);
     }
 }
 
@@ -32,26 +32,26 @@ function findInvalidInput(inputList) {
     });
 }
 
-function showInputError(formElement, inputElement, errorMessage) {
+function showInputError(formElement, inputElement, errorMessage, options) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.add(config.inputErrorClass);
+    inputElement.classList.add(options.inputErrorClass);
     errorElement.textContent = errorMessage;
-    errorElement.classList.add(config.errorClass);
+    errorElement.classList.add(options.errorClass);
 }
   
-function hideInputError(formElement, inputElement) {
+function hideInputError(formElement, inputElement, options) {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.remove(config.inputErrorClass);
-    errorElement.classList.remove(config.errorClass);
+    inputElement.classList.remove(options.inputErrorClass);
+    errorElement.classList.remove(options.errorClass);
     errorElement.textContent = "";
 }
 
-function toggleButtonState(inputList, buttonElement) {
+function toggleButtonState(inputList, buttonElement, options) {
     if (findInvalidInput(inputList)) {
         buttonElement.disabled = true;
-        buttonElement.classList.add(config.inactiveButtonClass);
+        buttonElement.classList.add(options.inactiveButtonClass);
     } else {
         buttonElement.disabled = false;
-        buttonElement.classList.remove(config.inactiveButtonClass);
+        buttonElement.classList.remove(options.inactiveButtonClass);
     }
 }

@@ -1,6 +1,6 @@
 // #region Enable validation
 
-const config = {
+const options = {
     formSelector: ".modal__form",
     inputSelector: ".modal__input",
     submitButtonSelector: ".modal__save-button",
@@ -9,7 +9,7 @@ const config = {
     errorClass: "modal__input-error_active"
 };
 
-enableValidation();
+enableValidation(options);
 
 // #endregion
 
@@ -60,7 +60,6 @@ editCloseButton.addEventListener("click", closeModal.bind(event, editModal));
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
 editModal.addEventListener("click", (event) => handleOverlayClick(event, editModal));
-document.addEventListener("keydown", (event) => handleKeyPress(event, editModal));
 
 // #endregion 
 
@@ -72,13 +71,12 @@ const imageInput = placeModal.querySelector(".modal__input_type_image");
 
 const placeButton = document.querySelector(".profile__add-button");
 const placeCloseButton = placeModal.querySelector(".modal__close-button");
-placeButton.addEventListener("click", openModal.bind(event, placeModal));
+placeButton.addEventListener("click", openPlaceModal);
 placeCloseButton.addEventListener("click", closeModal.bind(event, placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
 placeModal.addEventListener("click", (event) => handleOverlayClick(event, placeModal));
-document.addEventListener("keydown", (event) => handleKeyPress(event, placeModal));
 
 // #endregion 
 
@@ -90,7 +88,6 @@ const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
 imageCloseButton.addEventListener("click", closeModal.bind(event, imageModal));
 imageModal.addEventListener("click", (event) => handleOverlayClick(event, imageModal));
-document.addEventListener("keydown", (event) => handleKeyPress(event, imageModal));
 
 // #endregion
 
@@ -108,41 +105,34 @@ initialCards.forEach((data) => {
 
 // #region Universal modal methods
 
-function openModal(modal)
-{
-    const formElement = modal.querySelector(config.formSelector);
-    if (formElement) {
-        const inputElements = Array.from(
-            formElement.querySelectorAll(config.inputSelector));
-        const buttonElement = formElement.querySelector(config.submitButtonSelector);
-        toggleButtonState(inputElements, buttonElement);
-    }
+function openModal(modal) {
     modal.classList.add("modal_opened");
+    document.addEventListener("keydown", (event) => handleKeyPress(event, modal));
 }
 
-function closeModal(modal)
-{
-    const formElement = modal.querySelector(config.formSelector);
-    if (formElement){
-        const inputElements = Array.from(
-            formElement.querySelectorAll(config.inputSelector));
-        inputElements.forEach((inputElement) => hideInputError(formElement, inputElement));
-    }
+function closeModal(modal) {
     modal.classList.remove("modal_opened");
+    document.removeEventListener("keydown", handleKeyPress);
 }
 
-function handleOverlayClick(event, modal)
-{
+function handleOverlayClick(event, modal) {
     if (event.target === modal) {
         closeModal(modal);
     }
 }
 
-function handleKeyPress(event, modal)
-{
+const handleKeyPress = function(event, modal) {
     if (event.key === "Escape") {
         closeModal(modal);
     }
+}
+
+function openForm(formElement) {
+    const inputElements = Array.from(
+        formElement.querySelectorAll(options.inputSelector));
+    const buttonElement = formElement.querySelector(options.submitButtonSelector);
+    toggleButtonState(inputElements, buttonElement, options);
+    inputElements.forEach(input => checkInputValidity(formElement, input, options));
 }
 
 // #endregion
@@ -152,11 +142,11 @@ function handleKeyPress(event, modal)
 
 function openEditModal() {
     fillProfileForm();
-    openModal(editModal)
+    openForm(editForm);
+    openModal(editModal);
 }
 
-function fillProfileForm()
-{
+function fillProfileForm() {
     nameInput.value = nameText.textContent;
     descInput.value = descText.textContent;
 }
@@ -171,6 +161,11 @@ function updateInfo(event) {
 // #endregion 
 
 // #region New place modal & card creation methods
+
+function openPlaceModal() {
+    openForm(placeForm);
+    openModal(placeModal);
+}
 
 function addCard(event) {
     event.preventDefault();
