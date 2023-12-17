@@ -55,11 +55,11 @@ const descText = document.querySelector(".profile__description");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const editCloseButton = editModal.querySelector(".modal__close-button");
 editProfileButton.addEventListener("click", openEditModal);
-editCloseButton.addEventListener("click", closeModal.bind(event, editModal));
+editCloseButton.addEventListener("click", closeModal(editModal));
 
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
-editModal.addEventListener("click", (event) => handleOverlayClick(event, editModal));
+editModal.addEventListener("mousedown", (event) => handleOverlayClick(event, editModal));
 
 // #endregion 
 
@@ -72,11 +72,11 @@ const imageInput = placeModal.querySelector(".modal__input_type_image");
 const placeButton = document.querySelector(".profile__add-button");
 const placeCloseButton = placeModal.querySelector(".modal__close-button");
 placeButton.addEventListener("click", openPlaceModal);
-placeCloseButton.addEventListener("click", closeModal.bind(event, placeModal));
+placeCloseButton.addEventListener("click", closeModal(placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
-placeModal.addEventListener("click", (event) => handleOverlayClick(event, placeModal));
+placeModal.addEventListener("mousedown", (event) => handleOverlayClick(event, placeModal));
 
 // #endregion 
 
@@ -86,8 +86,8 @@ const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
-imageCloseButton.addEventListener("click", closeModal.bind(event, imageModal));
-imageModal.addEventListener("click", (event) => handleOverlayClick(event, imageModal));
+imageCloseButton.addEventListener("click", closeModal(imageModal));
+imageModal.addEventListener("mousedown", (event) => handleOverlayClick(event, imageModal));
 
 // #endregion
 
@@ -192,8 +192,7 @@ function getCardElement(data) {
         .addEventListener("click",likeCard);
     card.querySelector(".card__delete-button")
         .addEventListener("click", deleteCard);
-    card.querySelector(".card__image")
-        .addEventListener("click", openCard);
+    cardImage.addEventListener("click", openCard);
     return card;
 }
 
