@@ -13,6 +13,16 @@ enableValidation(options);
 
 // #endregion
 
+// #region Esc handler
+
+const handleKeyPress = function(event, modal) {
+    if (event.key === "Escape") {
+        closeModal(modal);
+    }
+}
+
+// #endregion
+
 // #region Initial cards
 
 const initialCards = [
@@ -117,12 +127,6 @@ function closeModal(modal) {
 
 function handleOverlayClick(event, modal) {
     if (event.target === modal) {
-        closeModal(modal);
-    }
-}
-
-const handleKeyPress = function(event, modal) {
-    if (event.key === "Escape") {
         closeModal(modal);
     }
 }
