@@ -15,6 +15,13 @@ function enableValidation(options)
     }
 }
 
+function checkFormValidity(formElement) {
+    const inputElements = Array.from(
+        formElement.querySelectorAll(options.inputSelector));
+    const buttonElement = formElement.querySelector(options.submitButtonSelector);
+    toggleButtonState(inputElements, buttonElement, options);
+}
+
 function checkInputValidity(formElement, inputElement, options)
 {
     if (!inputElement.validity.valid) {

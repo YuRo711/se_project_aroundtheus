@@ -15,9 +15,11 @@ enableValidation(options);
 
 // #region Esc handler
 
-const handleKeyPress = function(event, modal) {
-    if (event.key === "Escape") {
-        closeModal(modal);
+const handleKeyPress = function(modal) {
+    return (event) => {
+        if (event.key === "Escape") {
+            closeModal(modal);
+        }
     }
 }
 
@@ -114,7 +116,7 @@ initialCards.forEach((data) => {
 
 function openModal(modal) {
     modal.classList.add("modal_opened");
-    document.addEventListener("keydown", (event) => handleKeyPress(event, modal));
+    document.addEventListener("keydown", handleKeyPress(modal));
 }
 
 function closeModal(modal) {
@@ -129,20 +131,13 @@ function handleOverlayClick(event, modal) {
     }
 }
 
-function openForm(formElement) {
-    const inputElements = Array.from(
-        formElement.querySelectorAll(options.inputSelector));
-    const buttonElement = formElement.querySelector(options.submitButtonSelector);
-    toggleButtonState(inputElements, buttonElement, options);
-}
-
 // #endregion
 
 // #region Edit modal methods
 
 function openEditModal() {
     fillProfileForm();
-    openForm(editForm);
+    checkFormValidity(editForm);
     openModal(editModal);
 }
 
@@ -163,7 +158,7 @@ function updateInfo(event) {
 // #region New place modal & card creation methods
 
 function openPlaceModal() {
-    openForm(placeForm);
+    checkFormValidity(placeForm);
     openModal(placeModal);
 }
 
