@@ -65,7 +65,6 @@ const descText = document.querySelector(".profile__description");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const editCloseButton = editModal.querySelector(".modal__close-button");
 editProfileButton.addEventListener("click", openEditModal);
-editCloseButton.addEventListener("click", closeModal(editModal));
 
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
@@ -82,7 +81,6 @@ const imageInput = placeModal.querySelector(".modal__input_type_image");
 const placeButton = document.querySelector(".profile__add-button");
 const placeCloseButton = placeModal.querySelector(".modal__close-button");
 placeButton.addEventListener("click", openPlaceModal);
-placeCloseButton.addEventListener("click", closeModal(placeModal));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
@@ -96,7 +94,6 @@ const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
-imageCloseButton.addEventListener("click", closeModal(imageModal));
 imageModal.addEventListener("mousedown", (event) => handleOverlayClick(event, imageModal));
 
 // #endregion
@@ -126,7 +123,8 @@ function closeModal(modal) {
 }
 
 function handleOverlayClick(event, modal) {
-    if (event.target === modal) {
+    const closeButton = modal.querySelector(".modal__close-button");
+    if (event.target === modal || event.target === closeButton) {
         closeModal(modal);
     }
 }
@@ -136,11 +134,9 @@ function openForm(formElement) {
         formElement.querySelectorAll(options.inputSelector));
     const buttonElement = formElement.querySelector(options.submitButtonSelector);
     toggleButtonState(inputElements, buttonElement, options);
-    inputElements.forEach(input => checkInputValidity(formElement, input, options));
 }
 
 // #endregion
-
 
 // #region Edit modal methods
 
