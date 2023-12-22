@@ -15,8 +15,10 @@ enableValidation(options);
 
 // #region Esc handler
 
-const handleKeyPress = function(event, modal) {
+const handleEscapeKey = function(event) {
+    console.log(event);
     if (event.key === "Escape") {
+        const modal = document.querySelector(".modal_opened");
         closeModal(modal);
     }
 }
@@ -63,9 +65,7 @@ const nameText = document.querySelector(".profile__name");
 const descText = document.querySelector(".profile__description");
 
 const editProfileButton = document.querySelector(".profile__edit-button");
-const editCloseButton = editModal.querySelector(".modal__close-button");
 editProfileButton.addEventListener("click", openEditModal);
-editCloseButton.addEventListener("mousedown", closeModal.bind(this, editModal));
 
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
@@ -80,9 +80,7 @@ const titleInput = placeModal.querySelector(".modal__input_type_title");
 const imageInput = placeModal.querySelector(".modal__input_type_image");
 
 const placeButton = document.querySelector(".profile__add-button");
-const placeCloseButton = placeModal.querySelector(".modal__close-button");
 placeButton.addEventListener("click", openPlaceModal);
-placeCloseButton.addEventListener("mousedown", closeModal.bind(this, placeButton));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
@@ -95,9 +93,19 @@ placeModal.addEventListener("mousedown", (event) => handleOverlayClick(event, pl
 const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
-const imageCloseButton = imageModal.querySelector(".modal__close-button");
-imageCloseButton.addEventListener("mousedown", closeModal.bind(this, imageModal));
 imageModal.addEventListener("mousedown", (event) => handleOverlayClick(event, imageModal));
+
+// #endregion
+
+// #region Close buttons setup
+
+const closeButtons = document.querySelectorAll('.modal__close-button');
+
+closeButtons.forEach((button) => {
+  const closestModal = button.closest('.modal');
+  button.addEventListener('click', () => closeModal(closestModal));
+});
+
 
 // #endregion
 
@@ -118,12 +126,12 @@ initialCards.forEach((data) => {
 function openModal(modal) {
     modal.classList.add("modal_opened");
     // How do I add an event listener with event AND modal arguments? I've been looking it up everywhere, genuinely can't understand.
-    document.addEventListener("keydown", (event) => handleKeyPress(event, modal));
+    document.addEventListener("keydown", handleEscapeKey);
 }
 
 function closeModal(modal) {
     modal.classList.remove("modal_opened");
-    document.removeEventListener("keydown", (event) => handleKeyPress(event, modal));
+    document.removeEventListener("keydown", handleEscapeKey);
 }
 
 function handleOverlayClick(event, modal) {
