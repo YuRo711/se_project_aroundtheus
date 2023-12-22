@@ -15,11 +15,9 @@ enableValidation(options);
 
 // #region Esc handler
 
-const handleKeyPress = function(modal) {
-    return (event) => {
-        if (event.key === "Escape") {
-            closeModal(modal);
-        }
+const handleKeyPress = function(event, modal) {
+    if (event.key === "Escape") {
+        closeModal(modal);
     }
 }
 
@@ -67,6 +65,7 @@ const descText = document.querySelector(".profile__description");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const editCloseButton = editModal.querySelector(".modal__close-button");
 editProfileButton.addEventListener("click", openEditModal);
+editCloseButton.addEventListener("mousedown", closeModal.bind(this, editModal));
 
 const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
@@ -83,6 +82,7 @@ const imageInput = placeModal.querySelector(".modal__input_type_image");
 const placeButton = document.querySelector(".profile__add-button");
 const placeCloseButton = placeModal.querySelector(".modal__close-button");
 placeButton.addEventListener("click", openPlaceModal);
+placeCloseButton.addEventListener("mousedown", closeModal.bind(this, placeButton));
 
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
@@ -96,6 +96,7 @@ const imageModal = document.querySelector("#image-modal");
 const openedImage = imageModal.querySelector(".modal__image");
 const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
 const imageCloseButton = imageModal.querySelector(".modal__close-button");
+imageCloseButton.addEventListener("mousedown", closeModal.bind(this, imageModal));
 imageModal.addEventListener("mousedown", (event) => handleOverlayClick(event, imageModal));
 
 // #endregion
@@ -116,17 +117,17 @@ initialCards.forEach((data) => {
 
 function openModal(modal) {
     modal.classList.add("modal_opened");
-    document.addEventListener("keydown", handleKeyPress(modal));
+    // How do I add an event listener with event AND modal arguments? I've been looking it up everywhere, genuinely can't understand.
+    document.addEventListener("keydown", (event) => handleKeyPress(event, modal));
 }
 
 function closeModal(modal) {
     modal.classList.remove("modal_opened");
-    document.removeEventListener("keydown", handleKeyPress);
+    document.removeEventListener("keydown", (event) => handleKeyPress(event, modal));
 }
 
 function handleOverlayClick(event, modal) {
-    const closeButton = modal.querySelector(".modal__close-button");
-    if (event.target === modal || event.target === closeButton) {
+    if (event.target === modal) {
         closeModal(modal);
     }
 }
