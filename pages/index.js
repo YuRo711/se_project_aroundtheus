@@ -1,3 +1,10 @@
+// #region Import
+
+import { Card } from "../components/Card.js";
+import { FormValidator } from "../components/FormValidator.js";
+
+// #endregion
+
 // #region Enable validation
 
 const options = {
@@ -8,15 +15,11 @@ const options = {
     inputErrorClass: "modal__input_type_error",
     errorClass: "modal__input-error_active"
 };
-
-enableValidation(options);
-
 // #endregion
 
 // #region Esc handler
 
 const handleEscapeKey = function(event) {
-    console.log(event);
     if (event.key === "Escape") {
         const modal = document.querySelector(".modal_opened");
         closeModal(modal);
@@ -71,6 +74,9 @@ const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
 editModal.addEventListener("mousedown", (event) => handleOverlayClick(event, editModal));
 
+const editValidator = new FormValidator(options, editForm);
+editValidator.enableValidation();
+
 // #endregion 
 
 // #region New place modal setup
@@ -85,6 +91,9 @@ placeButton.addEventListener("click", openPlaceModal);
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
 placeModal.addEventListener("mousedown", (event) => handleOverlayClick(event, placeModal));
+
+const placeValidator = new FormValidator(options, placeForm);
+placeValidator.enableValidation();
 
 // #endregion 
 
@@ -125,7 +134,6 @@ initialCards.forEach((data) => {
 
 function openModal(modal) {
     modal.classList.add("modal_opened");
-    // How do I add an event listener with event AND modal arguments? I've been looking it up everywhere, genuinely can't understand.
     document.addEventListener("keydown", handleEscapeKey);
 }
 
@@ -146,7 +154,7 @@ function handleOverlayClick(event, modal) {
 
 function openEditModal() {
     fillProfileForm();
-    checkFormValidity(editForm);
+    editValidator.checkFormValidity(editForm);
     openModal(editModal);
 }
 
@@ -167,7 +175,7 @@ function updateInfo(event) {
 // #region New place modal & card creation methods
 
 function openPlaceModal() {
-    checkFormValidity(placeForm);
+    placeValidator.checkFormValidity(placeForm);
     openModal(placeModal);
 }
 
@@ -184,38 +192,15 @@ function addCard(event) {
 }
 
 function getCardElement(data) {
-    const name = data.name;
-    const image = data.link;
-    const card = cardTemplate.content.cloneNode(true);
-    const cardImage = card.querySelector(".card__image");
-    const cardTitle = card.querySelector(".card__title");
-    cardImage.setAttribute("src", image);
-    cardImage.setAttribute("alt", name);
-    cardTitle.textContent = name;
-    card.querySelector(".card__like-button")
-        .addEventListener("click",likeCard);
-    card.querySelector(".card__delete-button")
-        .addEventListener("click", deleteCard);
-    cardImage.addEventListener("click", openCard);
-    return card;
+    const cardSelector = "card";
+    const card = new Card(data, cardSelector, openCard);
+    const cardElement = card.generateCard();
+    return cardElement;
 }
 
 // #endregion 
 
 // #region Card interaction methods
-
-function likeCard(event)
-{
-    const button = event.target;
-    button.classList.toggle("card__like-button_active");
-}
-
-function deleteCard(event)
-{
-    const button = event.target;
-    const card = button.closest(".card");
-    cards.removeChild(card)
-}
 
 function openCard(event)
 {
