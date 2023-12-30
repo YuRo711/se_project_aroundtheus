@@ -15,7 +15,7 @@ export class Card {
     }
 
     _deleteHandler(event) {
-        cards.removeChild(this._element);
+        event.target.closest(".card").remove();
     }
 
     _likeHandler(event) {
@@ -32,8 +32,8 @@ export class Card {
         const cardImage = this._element.querySelector(".card__image");
         const cardTitle = this._element.querySelector(".card__title");
         cardImage.setAttribute("src", image);
-        cardImage.setAttribute("alt", this.name);
-        cardTitle.textContent = this.name;
+        cardImage.setAttribute("alt", name);
+        cardTitle.textContent = name;
 
         this._setEventListeners();
         return this._element;
