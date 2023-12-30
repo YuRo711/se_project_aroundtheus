@@ -15,6 +15,23 @@ const options = {
     inputErrorClass: "modal__input_type_error",
     errorClass: "modal__input-error_active"
 };
+
+const formValidators = {}
+
+const enableValidation = (config) => {
+  const formList = Array.from(document.querySelectorAll(config.formSelector))
+  formList.forEach((formElement) => {
+    const validator = new FormValidator(config, formElement)
+    const formName = formElement.getAttribute('name')
+
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+};
+
+enableValidation(options);
+
+
 // #endregion
 
 // #region Esc handler
@@ -74,9 +91,6 @@ const editForm = document.forms["edit-form"];
 editForm.addEventListener("submit", updateInfo);
 editModal.addEventListener("mousedown", (event) => handleOverlayClick(event, editModal));
 
-const editValidator = new FormValidator(options, editForm);
-editValidator.enableValidation();
-
 // #endregion 
 
 // #region New place modal setup
@@ -91,9 +105,6 @@ placeButton.addEventListener("click", openPlaceModal);
 const placeForm = document.forms["place-form"];
 placeForm.addEventListener("submit", addCard);
 placeModal.addEventListener("mousedown", (event) => handleOverlayClick(event, placeModal));
-
-const placeValidator = new FormValidator(options, placeForm);
-placeValidator.enableValidation();
 
 // #endregion 
 
@@ -154,7 +165,7 @@ function handleOverlayClick(event, modal) {
 
 function openEditModal() {
     fillProfileForm();
-    editValidator.checkFormValidity(editForm);
+    formValidators["edit-form"].toggleButtonState();
     openModal(editModal);
 }
 
@@ -175,7 +186,7 @@ function updateInfo(event) {
 // #region New place modal & card creation methods
 
 function openPlaceModal() {
-    placeValidator.checkFormValidity(placeForm);
+    formValidators["place-form"].toggleButtonState();
     openModal(placeModal);
 }
 
