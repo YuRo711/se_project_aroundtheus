@@ -1,14 +1,10 @@
-import { Popup } from "./Popup";
+import { Popup } from "./Popup.js";
 
 export class PopupWithImage extends Popup {
     constructor(selector) {
         super(selector);
     }
-
-    _handleEscClose(event) {
-        super._handleEscClose(event);
-    }
-
+    
     open(data) {
         const imageLink = data.link;
         const imageTitle = data.name;
@@ -18,13 +14,5 @@ export class PopupWithImage extends Popup {
         openedImage.setAttribute("alt", imageTitle);
         imageSubtitle.textContent = imageTitle;
         super.open();
-    }
-
-    close() {
-        super.close();
-    }
-
-    setEventListeners() {
-        super.setEventListeners();
     }
 }

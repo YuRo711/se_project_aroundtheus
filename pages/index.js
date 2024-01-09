@@ -2,11 +2,12 @@
 
 import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
-
+import { PopupWithForm } from "../components/PopupWithForm.js";
+import { PopupWithImage } from "../components/PopupWithImage.js"; 
 
 // #endregion
 
-// #region Enable validation
+// #region Form popup validation
 
 const options = {
     formSelector: ".modal__form",
@@ -17,21 +18,27 @@ const options = {
     errorClass: "modal__input-error_active"
 };
 
-const formValidators = {}
+const formValidators = {};
+const popups = {};
 
-const enableValidation = (config) => {
-  const formList = Array.from(document.querySelectorAll(config.formSelector))
-  formList.forEach((formElement) => {
-    const validator = new FormValidator(config, formElement)
-    const formName = formElement.getAttribute('name')
+function confiureFormModals(config)
+{
+    const modalList = Array.from(document.querySelectorAll(".modal_is-form"));
+    modalList.forEach((modal) => {
+        const modalId = modal.id;
+        const newPopup = new PopupWithForm(`#${modalId}`);
+        newPopup.setEventListeners();
+        popups[modalId] = newPopup;
 
-    formValidators[formName] = validator;
-    validator.enableValidation();
-  });
-};
+        const popupForm = newPopup.form;
+        const newValidator = new FormValidator(config, popupForm);
+        const formId = popupForm.getAttribute('name');
+        newValidator.enableValidation();
+        formValidators[formId] = newValidator;
+    })
+}
 
-enableValidation(options);
-
+confiureFormModals(options);
 
 // #endregion
 
@@ -68,54 +75,29 @@ const initialCards = [
 
 // #region Edit profile modal setup
 
-const editModal = document.querySelector("#edit-modal")
-const nameInput = editModal.querySelector(".modal__input_type_name");
-const descInput = editModal.querySelector(".modal__input_type_description");
-const nameText = document.querySelector(".profile__name");
-const descText = document.querySelector(".profile__description");
-
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", openEditModal);
 
-const editForm = document.forms["edit-form"];
-editForm.addEventListener("submit", updateInfo);
-editModal.addEventListener("mousedown", (event) => handleOverlayClick(event, editModal));
+const nameText = document.querySelector(".profile__name");
+const descText = document.querySelector(".profile__description");
+
+popups["edit-modal"].setSubmitHandler(updateInfo);
 
 // #endregion 
 
 // #region New place modal setup
 
-const placeModal = document.querySelector("#place-modal")
-const titleInput = placeModal.querySelector(".modal__input_type_title");
-const imageInput = placeModal.querySelector(".modal__input_type_image");
+const newPlaceButton = document.querySelector(".profile__add-button");
+newPlaceButton.addEventListener("click", openPlaceModal);
 
-const placeButton = document.querySelector(".profile__add-button");
-placeButton.addEventListener("click", openPlaceModal);
-
-const placeForm = document.forms["place-form"];
-placeForm.addEventListener("submit", addCard);
-placeModal.addEventListener("mousedown", (event) => handleOverlayClick(event, placeModal));
+popups["place-modal"].setSubmitHandler(addCard);
 
 // #endregion 
 
 // #region Image modal setup
 
-const imageModal = document.querySelector("#image-modal");
-const openedImage = imageModal.querySelector(".modal__image");
-const imageSubtitle = imageModal.querySelector(".modal__image-subtitle");
-imageModal.addEventListener("mousedown", (event) => handleOverlayClick(event, imageModal));
-
-// #endregion
-
-// #region Close buttons setup
-
-const closeButtons = document.querySelectorAll('.modal__close-button');
-
-closeButtons.forEach((button) => {
-  const closestModal = button.closest('.modal');
-  button.addEventListener('click', () => closeModal(closestModal));
-});
-
+const imageModal = new PopupWithImage("#image-modal");
+imageModal.setEventListeners();
 
 // #endregion
 
@@ -131,32 +113,13 @@ initialCards.forEach((data) => {
 // #endregion 
 
 
-// #region Universal modal methods
-
-function openModal(modal) {
-    modal.classList.add("modal_opened");
-    document.addEventListener("keydown", handleEscapeKey);
-}
-
-function closeModal(modal) {
-    modal.classList.remove("modal_opened");
-    document.removeEventListener("keydown", handleEscapeKey);
-}
-
-function handleOverlayClick(event, modal) {
-    if (event.target === modal) {
-        closeModal(modal);
-    }
-}
-
-// #endregion
-
 // #region Edit modal methods
 
 function openEditModal() {
     fillProfileForm();
+    const editPopup = popups["edit-modal"];
+    editPopup.open();
     formValidators["edit-form"].toggleButtonState();
-    openModal(editModal);
 }
 
 function fillProfileForm() {
@@ -164,11 +127,9 @@ function fillProfileForm() {
     descInput.value = descText.textContent;
 }
 
-function updateInfo(event) {
-    event.preventDefault();
-    nameText.textContent = nameInput.value;
-    descText.textContent = descInput.value;
-    closeModal(editModal);
+function updateInfo(event, data) {
+    nameText.textContent = data["name-input"];
+    descText.textContent = data["description-input"];
 }
 
 // #endregion 
@@ -177,19 +138,17 @@ function updateInfo(event) {
 
 function openPlaceModal() {
     formValidators["place-form"].toggleButtonState();
-    openModal(placeModal);
+    popups["place-modal"].open();
 }
 
-function addCard(event) {
-    event.preventDefault();
-    const data = {
-        name: titleInput.value,
-        link: imageInput.value,
+function addCard(event, data) {
+    const cardData = {
+        name: data["title-input"],
+        link: data["url-input"],
     };
-    const card = getCardElement(data);
+    const card = getCardElement(cardData);
     cards.insertBefore(card, cards.firstChild);
     event.target.reset();
-    closeModal(placeModal);
 }
 
 function getCardElement(data) {
@@ -205,12 +164,12 @@ function getCardElement(data) {
 
 function openCard(event)
 {
-    openModal(imageModal);
     const imageLink = event.target.getAttribute("src");
     const imageTitle = event.target.getAttribute("alt");
-    openedImage.setAttribute("src", imageLink);
-    openedImage.setAttribute("alt", imageTitle);
-    imageSubtitle.textContent = imageTitle;
+    imageModal.open({
+        name: imageTitle,
+        link: imageLink
+    })
 }
 
 // #endregion 

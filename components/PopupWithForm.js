@@ -1,29 +1,35 @@
-import { Popup } from "./Popup";
+import { FormValidator } from "./FormValidator.js";
+import { Popup } from "./Popup.js";
+import { UserInfo } from "./UserInfo.js";
 
 export class PopupWithForm extends Popup {
     constructor(selector) {
         super(selector);
-    }
-
-    _handleEscClose(event) {
-        super._handleEscClose(event);
+        this.form = this._element.querySelector("form");
     }
 
     _getInputValues() {
-
-    }
-
-    open() {
-        super.open();
-    }
-
-    close() {
-        super.close();
+        const inputFields = Array.from(this.form.querySelectorAll(".modal__input"));
+        const data = {};
+        inputFields.forEach((inputElement) => {
+            const inputId = inputElement.getAttribute("id");
+            const inputValue = inputElement.value;
+            data[inputId] = inputValue;
+        })
+        return data;
     }
 
     setEventListeners() {
-        const form = this._element.querySelector(".modal__form");
-        form.addEventListener("submit", updateInfo);
+        this.form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const inputValues = this._getInputValues();
+            this._submitHandler(event, inputValues);
+            this.close();
+        });
         super.setEventListeners();
+    }
+
+    setSubmitHandler(submitHandler) {
+        this._submitHandler = submitHandler;
     }
 }
