@@ -3,6 +3,7 @@
 import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
 
+
 // #endregion
 
 // #region Enable validation
@@ -31,17 +32,6 @@ const enableValidation = (config) => {
 
 enableValidation(options);
 
-
-// #endregion
-
-// #region Esc handler
-
-const handleEscapeKey = function(event) {
-    if (event.key === "Escape") {
-        const modal = document.querySelector(".modal_opened");
-        closeModal(modal);
-    }
-}
 
 // #endregion
 
