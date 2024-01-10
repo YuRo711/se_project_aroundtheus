@@ -5,6 +5,7 @@ import { FormValidator } from "../components/FormValidator.js";
 import { PopupWithForm } from "../components/PopupWithForm.js";
 import { PopupWithImage } from "../components/PopupWithImage.js"; 
 import { initialCards } from "../utils/constants.js";
+import "./index.css";
 
 // #endregion
 
@@ -40,6 +41,10 @@ function confiureFormModals(config)
 }
 
 confiureFormModals(options);
+
+// #endregion
+
+// #region Images setup
 
 // #endregion
 
