@@ -3,6 +3,7 @@ export class Section {
         this._items = items;
         this._renderer = renderer;
         this._selector = selector;
+        this._container = document.querySelector(this._selector);
     }
 
     renderItems() {
@@ -10,7 +11,7 @@ export class Section {
     }
 
     addItem(element) {
-        document.querySelector(this._selector).append(element);
-        items.append(element);
+        this._container.insertBefore(element, this._container.firstChild);
+        this._items.push(element);
     }
 }

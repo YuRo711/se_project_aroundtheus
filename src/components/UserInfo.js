@@ -12,7 +12,9 @@ export class UserInfo {
     }
 
     setUserInfo(data) {
-        document.querySelector(nameSelector).textContent = data.name;
-        document.querySelector(bioSelector).textContent = data.description;
+        document.querySelector(this._nameSelector)
+            .textContent = data.name;
+        document.querySelector(this._bioSelector)
+            .textContent = data.description;
     }
 }

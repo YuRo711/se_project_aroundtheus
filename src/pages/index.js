@@ -4,89 +4,86 @@ import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
 import { PopupWithForm } from "../components/PopupWithForm.js";
 import { PopupWithImage } from "../components/PopupWithImage.js"; 
-import { initialCards, options } from "../utils/constants.js";
+import { Section } from "../components/Section.js";
+import { UserInfo } from "../components/UserInfo.js";
+import { 
+    initialCards, 
+    options, 
+    initialName, 
+    initialDesc 
+} from "../utils/constants.js";
 import "./index.css";
 
 // #endregion
 
-// #region Handle Esc press
-
-const handleEscClose = (event) => {
-    if (event.key === "Escape") {
-        // this.close() is not working, and the program sees "this" as the document
-        // cound you please explain, is there some other way to implement this method?
-        const openedPopup = document.querySelector(".modal_opened");
-        openedPopup.classList.remove("modal_opened");
-        document.removeEventListener("keydown", handleEscClose);
-    }
-}
-
-// #endregion
-
-// #region Form popup validation
+// #region Popup configuration
 
 const formValidators = {};
 const popups = {};
 
-function confiureFormModals(config, escHandler)
+function confiureFormModal(modalId, submitHandler, config)
 {
-    const modalList = Array.from(document.querySelectorAll(".modal_is-form"));
-    modalList.forEach((modal) => {
-        const modalId = modal.id;
-        const newPopup = new PopupWithForm(`#${modalId}`);
-        newPopup.setEventListeners(escHandler);
-        popups[modalId] = newPopup;
-
-        const popupForm = newPopup.form;
-        const newValidator = new FormValidator(config, popupForm);
-        const formId = popupForm.getAttribute('name');
-        newValidator.enableValidation();
-        formValidators[formId] = newValidator;
-    })
+    const newPopup = new PopupWithForm(`#${modalId}`, submitHandler);
+    newPopup.setEventListeners();
+    popups[modalId] = newPopup;
+    enablePopupValidation(newPopup, config);
 }
 
-confiureFormModals(options, handleEscClose);
+function enablePopupValidation(popup, config)
+{
+    const popupForm = popup.form;
+    const newValidator = new FormValidator(config, popupForm);
+    const formId = popupForm.getAttribute('name');
+    newValidator.enableValidation();
+    formValidators[formId] = newValidator;
+}
 
 // #endregion
 
 // #region Edit profile modal setup
 
+confiureFormModal("edit-modal", updateInfo, options);
+
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", openEditModal);
 
-const nameText = document.querySelector(".profile__name");
-const descText = document.querySelector(".profile__description");
 const nameInput = document.querySelector(".modal__input_type_name");
 const descInput = document.querySelector(".modal__input_type_description");
 
-popups["edit-modal"].setSubmitHandler(updateInfo);
+const userInfo = new UserInfo(".profile__name", ".profile__description");
+userInfo.setUserInfo(initialName, initialDesc);
 
 // #endregion 
 
 // #region New place modal setup
 
+confiureFormModal("place-modal", addCard, options);
+
 const newPlaceButton = document.querySelector(".profile__add-button");
 newPlaceButton.addEventListener("click", openPlaceModal);
-
-popups["place-modal"].setSubmitHandler(addCard);
 
 // #endregion 
 
 // #region Image modal setup
 
 const imageModal = new PopupWithImage("#image-modal");
-imageModal.setEventListeners(handleEscClose);
+imageModal.setEventListeners();
 
 // #endregion
 
 // #region Cards rendering
 
 const cards = document.querySelector(".cards");
-const cardTemplate = document.getElementById("card");
-initialCards.forEach((data) => {
-    const card = getCardElement(data);
-    cards.append(card);
-});
+
+const cardsSection = new Section({
+    items: initialCards,
+    renderer: (data) => {
+        const card = getCardElement(data);
+        cards.append(card);
+    }
+}, ".cards");
+
+cardsSection.renderItems();
 
 // #endregion 
 
@@ -101,8 +98,9 @@ function openEditModal() {
 }
 
 function fillProfileForm() {
-    nameInput.value = nameText.textContent;
-    descInput.value = descText.textContent;
+    const info = userInfo.getUserInfo();
+    nameInput.value = info.name;
+    descInput.value = info.description;
 }
 
 function updateInfo(event, data) {
@@ -124,30 +122,16 @@ function addCard(event, data) {
         name: data["title-input"],
         link: data["url-input"],
     };
-    const card = getCardElement(cardData);
-    cards.insertBefore(card, cards.firstChild);
+    cardsSection.addItem(getCardElement(cardData));
     event.target.reset();
 }
 
 function getCardElement(data) {
     const cardSelector = "card";
-    const card = new Card(data, cardSelector, openCard);
+    const card = new Card(data, cardSelector,
+        () => { imageModal.open(data) });
     const cardElement = card.generateCard();
     return cardElement;
-}
-
-// #endregion 
-
-// #region Card interaction methods
-
-function openCard(event)
-{
-    const imageLink = event.target.getAttribute("src");
-    const imageTitle = event.target.getAttribute("alt");
-    imageModal.open({
-        name: imageTitle,
-        link: imageLink
-    })
 }
 
 // #endregion 

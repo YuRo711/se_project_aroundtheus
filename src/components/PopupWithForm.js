@@ -1,17 +1,17 @@
-import { FormValidator } from "./FormValidator.js";
 import { Popup } from "./Popup.js";
-import { UserInfo } from "./UserInfo.js";
 
 export class PopupWithForm extends Popup {
-    constructor(selector) {
+    constructor(selector, submitHandler) {
         super(selector);
         this.form = this._element.querySelector("form");
+        this._submitHandler = submitHandler;
+        this._inputFields = 
+            Array.from(this.form.querySelectorAll(".modal__input"));
     }
 
     _getInputValues() {
-        const inputFields = Array.from(this.form.querySelectorAll(".modal__input"));
         const data = {};
-        inputFields.forEach((inputElement) => {
+        this._inputFields.forEach((inputElement) => {
             const inputId = inputElement.getAttribute("id");
             const inputValue = inputElement.value;
             data[inputId] = inputValue;
@@ -19,17 +19,13 @@ export class PopupWithForm extends Popup {
         return data;
     }
 
-    setEventListeners(escHandler) {
+    setEventListeners() {
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
             const inputValues = this._getInputValues();
             this._submitHandler(event, inputValues);
             this.close();
         });
-        super.setEventListeners(escHandler);
-    }
-
-    setSubmitHandler(submitHandler) {
-        this._submitHandler = submitHandler;
+        super.setEventListeners();
     }
 }
