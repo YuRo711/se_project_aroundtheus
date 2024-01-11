@@ -4,32 +4,37 @@ import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
 import { PopupWithForm } from "../components/PopupWithForm.js";
 import { PopupWithImage } from "../components/PopupWithImage.js"; 
-import { initialCards } from "../utils/constants.js";
+import { initialCards, options } from "../utils/constants.js";
 import "./index.css";
+
+// #endregion
+
+// #region Handle Esc press
+
+const handleEscClose = (event) => {
+    if (event.key === "Escape") {
+        // this.close() is not working, and the program sees "this" as the document
+        // cound you please explain, is there some other way to implement this method?
+        const openedPopup = document.querySelector(".modal_opened");
+        openedPopup.classList.remove("modal_opened");
+        document.removeEventListener("keydown", handleEscClose);
+    }
+}
 
 // #endregion
 
 // #region Form popup validation
 
-const options = {
-    formSelector: ".modal__form",
-    inputSelector: ".modal__input",
-    submitButtonSelector: ".modal__save-button",
-    inactiveButtonClass: "modal__save-button_deactivated",
-    inputErrorClass: "modal__input_type_error",
-    errorClass: "modal__input-error_active"
-};
-
 const formValidators = {};
 const popups = {};
 
-function confiureFormModals(config)
+function confiureFormModals(config, escHandler)
 {
     const modalList = Array.from(document.querySelectorAll(".modal_is-form"));
     modalList.forEach((modal) => {
         const modalId = modal.id;
         const newPopup = new PopupWithForm(`#${modalId}`);
-        newPopup.setEventListeners();
+        newPopup.setEventListeners(escHandler);
         popups[modalId] = newPopup;
 
         const popupForm = newPopup.form;
@@ -40,11 +45,7 @@ function confiureFormModals(config)
     })
 }
 
-confiureFormModals(options);
-
-// #endregion
-
-// #region Images setup
+confiureFormModals(options, handleEscClose);
 
 // #endregion
 
@@ -55,6 +56,8 @@ editProfileButton.addEventListener("click", openEditModal);
 
 const nameText = document.querySelector(".profile__name");
 const descText = document.querySelector(".profile__description");
+const nameInput = document.querySelector(".modal__input_type_name");
+const descInput = document.querySelector(".modal__input_type_description");
 
 popups["edit-modal"].setSubmitHandler(updateInfo);
 
@@ -72,7 +75,7 @@ popups["place-modal"].setSubmitHandler(addCard);
 // #region Image modal setup
 
 const imageModal = new PopupWithImage("#image-modal");
-imageModal.setEventListeners();
+imageModal.setEventListeners(handleEscClose);
 
 // #endregion
 

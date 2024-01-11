@@ -24,3 +24,12 @@ export const initialCards = [
         link: "https://practicum-content.s3.us-west-1.amazonaws.com/software-engineer/around-project/lago.jpg",
     },
 ];
+
+export const options = {
+    formSelector: ".modal__form",
+    inputSelector: ".modal__input",
+    submitButtonSelector: ".modal__save-button",
+    inactiveButtonClass: "modal__save-button_deactivated",
+    inputErrorClass: "modal__input_type_error",
+    errorClass: "modal__input-error_active"
+};
