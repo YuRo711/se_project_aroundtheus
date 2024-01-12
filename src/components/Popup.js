@@ -6,10 +6,7 @@ export class Popup {
 
     _handleEsc = (event) => {
         if (event.key === "Escape") {
-            // this.close() is not working, and the program sees "this" as the document
-            // cound you please explain, is there some other way to implement this method?
-            const openedPopup = document.querySelector(".modal_opened");
-            openedPopup.classList.remove("modal_opened");
+            this.close();
             document.removeEventListener("keydown", this._handleEsc);
         }
     }

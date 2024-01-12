@@ -19,14 +19,13 @@ import "./index.css";
 // #region Popup configuration
 
 const formValidators = {};
-const popups = {};
 
 function confiureFormModal(modalId, submitHandler, config)
 {
     const newPopup = new PopupWithForm(`#${modalId}`, submitHandler);
     newPopup.setEventListeners();
-    popups[modalId] = newPopup;
     enablePopupValidation(newPopup, config);
+    return newPopup;
 }
 
 function enablePopupValidation(popup, config)
@@ -42,7 +41,7 @@ function enablePopupValidation(popup, config)
 
 // #region Edit profile modal setup
 
-confiureFormModal("edit-modal", updateInfo, options);
+const editPopup = confiureFormModal("edit-modal", updateInfo, options);
 
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", openEditModal);
@@ -56,7 +55,7 @@ const userInfo = new UserInfo(".profile__name", ".profile__description");
 
 // #region New place modal setup
 
-confiureFormModal("place-modal", addCard, options);
+const placePopup = confiureFormModal("place-modal", addCard, options);
 
 const newPlaceButton = document.querySelector(".profile__add-button");
 newPlaceButton.addEventListener("click", openPlaceModal);
@@ -91,7 +90,6 @@ cardsSection.renderItems();
 
 function openEditModal() {
     fillProfileForm();
-    const editPopup = popups["edit-modal"];
     editPopup.open();
     formValidators["edit-form"].toggleButtonState();
 }
@@ -115,7 +113,7 @@ function updateInfo(event, data) {
 
 function openPlaceModal() {
     formValidators["place-form"].toggleButtonState();
-    popups["place-modal"].open();
+    placePopup.open();
 }
 
 function addCard(event, data) {
