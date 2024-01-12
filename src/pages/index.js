@@ -102,7 +102,7 @@ function fillProfileForm() {
     descInput.value = info.description;
 }
 
-function updateInfo(data) {
+function updateInfo(event, data) {
     userInfo.setUserInfo({
         name: data["name-input"],
         description: data["description-input"],
