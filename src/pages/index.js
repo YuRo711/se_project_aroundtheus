@@ -77,7 +77,7 @@ const cardsSection = new Section({
     items: initialCards,
     renderer: (data) => {
         const card = getCardElement(data);
-        cards.append(card);
+        cardsSection.addItem(card);
     }
 }, ".cards");
 
