@@ -10,7 +10,7 @@ export class Popup {
             // cound you please explain, is there some other way to implement this method?
             const openedPopup = document.querySelector(".modal_opened");
             openedPopup.classList.remove("modal_opened");
-            document.removeEventListener("keydown", _handleEsc);
+            document.removeEventListener("keydown", this._handleEsc);
         }
     }
 

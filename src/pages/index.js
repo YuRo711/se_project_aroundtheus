@@ -51,7 +51,6 @@ const nameInput = document.querySelector(".modal__input_type_name");
 const descInput = document.querySelector(".modal__input_type_description");
 
 const userInfo = new UserInfo(".profile__name", ".profile__description");
-userInfo.setUserInfo(initialName, initialDesc);
 
 // #endregion 
 
@@ -103,9 +102,11 @@ function fillProfileForm() {
     descInput.value = info.description;
 }
 
-function updateInfo(event, data) {
-    nameText.textContent = data["name-input"];
-    descText.textContent = data["description-input"];
+function updateInfo(data) {
+    userInfo.setUserInfo({
+        name: data["name-input"],
+        description: data["description-input"],
+    });
 }
 
 // #endregion 

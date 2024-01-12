@@ -6,8 +6,8 @@ export class UserInfo {
 
     getUserInfo() {
         return {
-            name: document.querySelector(nameSelector).textContent,
-            description: document.querySelector(bioSelector).textContent
+            name: document.querySelector(this._nameSelector).textContent,
+            description: document.querySelector(this._bioSelector).textContent
         }
     }
 

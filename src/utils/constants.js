@@ -33,8 +33,3 @@ export const options = {
     inputErrorClass: "modal__input_type_error",
     errorClass: "modal__input-error_active"
 };
-
-export const initialName = 
-    document.querySelector(".profile__name").textContent;
-export const initialDesc = 
-    document.querySelector(".profile__description").textContent;
