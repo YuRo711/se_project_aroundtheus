@@ -4,9 +4,11 @@ export class Api {
         this._headers = options.headers;
     }
 
-    async _getJson(url) {
+    async _request(url, method, requestBody) {
         return fetch(this._baseUrl + url, {
+            method: method,
             headers: this._headers,
+            body: JSON.stringify(requestBody)
           })
             .then((res) => {
                 if (res.ok) {
@@ -16,32 +18,23 @@ export class Api {
             .catch((err) => console.log("Error: " + err));
     }
 
-    async _post(url, requestBody) {
-        return fetch(this._baseUrl + url, {
-            method: "POST",
-            headers: this._headers,
-            body: JSON.stringify(requestBody)
-        })
-            .then((res) => res.json())
-            .catch((err) => console.log("Error: " + err));
-    }
-
     async getProfileInfo() {
-        return this._getJson("/users/me");
+        return this._request("/users/me", "GET");
     }
 
     async getCards() {
-        return this._getJson("/cards");
+        return this._request("/cards", "GET");
     }
 
     async addCard(cardData) {
-        this._post("/cards", cardData)
+        return this._request("/cards", "POST", cardData);
     }
 
     async deleteCard(cardId) {
-        return fetch(this._baseUrl + "/cards/" + cardId, {
-            method: "DELETE",
-            headers: this._headers,
-        })
+        return this._request("/cards/" + cardId, "DELETE");
+    }
+    
+    async editProfile(newInfo) {
+        return this._request("/users/me", "PATCH", newInfo);
     }
 }

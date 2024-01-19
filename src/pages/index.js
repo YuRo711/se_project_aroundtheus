@@ -145,10 +145,15 @@ function fillProfileForm() {
     descInput.value = info.description;
 }
 
-function updateInfo(event, data) {
-    userInfo.setUserInfo({
+async function updateInfo(event, data) {
+    const newInfo = {
         name: data["name-input"],
         description: data["description-input"],
+    };
+    userInfo.setUserInfo(newInfo);
+    api.editProfile({
+        name: newInfo.name,
+        about: newInfo.description
     });
 }
 
