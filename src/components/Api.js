@@ -33,6 +33,14 @@ export class Api {
     async deleteCard(cardId) {
         return this._request("/cards/" + cardId, "DELETE");
     }
+
+    async likeCard(cardId) {
+        return this._request("/cards/" + cardId + "/likes", "PUT");
+    }
+
+    async unlikeCard(cardId) {
+        return this._request("/cards/" + cardId + "/likes", "DELETE");
+    }
     
     async editProfile(newInfo) {
         return this._request("/users/me", "PATCH", newInfo);

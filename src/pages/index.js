@@ -8,10 +8,7 @@ import { Section } from "../components/Section.js";
 import { UserInfo } from "../components/UserInfo.js";
 import { Api } from "../components/Api.js";
 import { 
-    initialCards, 
     options, 
-    initialName, 
-    initialDesc,
     domain,
     token,
 } from "../utils/constants.js";
@@ -194,12 +191,29 @@ function deleteCard(cardElement, data) {
     deletePopup.close();
 }
 
+function likeCard(event, data) {
+    const button = event.target;
+    button.classList.toggle("card__like-button_active");
+    if (data.isLiked) {
+        api.unlikeCard(data._id);
+        data.isLiked = false;
+    } else {
+        api.likeCard(data._id);
+        data.isLiked = true;
+    }
+}
+
 function getCardElement(data) {
     const cardSelector = "card";
     const card = new Card(data, cardSelector,
         () => { imageModal.open(data) },
-        (event) => { openConfirmModal(event, data) });
+        (event) => { openConfirmModal(event, data) },
+        (event) => { likeCard(event, data) });
     const cardElement = card.generateCard();
+    if (data.isLiked) {
+        const likeButton = cardElement.querySelector(".card__like-button");
+        likeButton.classList.toggle("card__like-button_active");
+    }
     return cardElement;
 }
 

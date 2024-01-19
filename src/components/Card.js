@@ -1,9 +1,10 @@
 export class Card {
-    constructor(data, cardSelector, handleImageClick, deleteHandler) {
+    constructor(data, cardSelector, handleImageClick, deleteHandler, likeHandler) {
         this._data = data;
         this._cardSelector = cardSelector;
         this._handleImageClick = handleImageClick;
         this._deleteHandler = deleteHandler;
+        this._likeHandler = likeHandler;
     }
 
     _setEventListeners() {
@@ -13,11 +14,6 @@ export class Card {
             .addEventListener("click", this._deleteHandler);
         this._element.querySelector(".card__image")
             .addEventListener("click", this._handleImageClick);
-    }
-
-    _likeHandler(event) {
-        const button = event.target;
-        button.classList.toggle("card__like-button_active");
     }
 
     generateCard() {
