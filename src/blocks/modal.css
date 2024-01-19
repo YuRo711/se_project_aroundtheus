@@ -33,6 +33,10 @@
     height: 181px;
 }
 
+.modal__container_type_avatar {
+    height: 272px;
+}
+
 .modal__close-button {
     background: url('../images/Close\ Icon.svg') no-repeat;
     background-size: cover;

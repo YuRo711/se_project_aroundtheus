@@ -93,6 +93,26 @@
           <button class="modal__close-button" type="button"></button>
         </div>
       </div>
+      <div class="modal" id="avatar-modal">
+        <div class="modal__container modal__container_type_avatar">
+          <button class="modal__close-button" type="button"></button>
+          <h2 class="modal__heading">Change profile picture</h2>
+          <form class="modal__form" id="avatar-form" name="avatar-form">
+            <fieldset class="modal__fieldset">
+              <input type="url"
+              class="modal__input modal__input_type_image"
+              placeholder="Image link"
+              id="url-input"
+              required
+            >
+            <span class="modal__input-error url-input-error"></span>
+            </fieldset>
+            <button class="modal__save-button" type="submit">
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
       <header class="header">
         <img class="header__logo"
           src="<%=require('./images/logo.svg')%>"
@@ -102,10 +122,15 @@
       <main class="content">
         <section class="profile" id="profile">
           <div class="profile__avatar">
+            <div class="profile__avatar-overlay"></div>
             <img class="profile__image"
               src="<%=require('./images/cousteau.png')%>"
               alt="Profile image"
             >
+            <img class="profile__avatar-edit-icon"
+            src="<%=require('./images/edit-picture.svg')%>"
+            alt="Edit picture icon"
+          >
           </div>
           <div class="profile__info">
             <div class="profile__heading">

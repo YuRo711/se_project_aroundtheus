@@ -45,4 +45,8 @@ export class Api {
     async editProfile(newInfo) {
         return this._request("/users/me", "PATCH", newInfo);
     }
+
+    async updateAvatar(link) {
+        return this._request("/users/me/avatar", "PATCH", { avatar: link });
+    }
 }

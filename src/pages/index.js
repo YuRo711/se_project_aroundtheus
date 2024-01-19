@@ -70,15 +70,19 @@ function enablePopupValidation(popup, config)
 
 // #endregion
 
-// #region Edit profile modal setup
+// #region Edit profile & avatar modals setup
 
 const editPopup = confiureFormModal("edit-modal", updateInfo, options);
-
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", openEditModal);
 
 const nameInput = document.querySelector(".modal__input_type_name");
 const descInput = document.querySelector(".modal__input_type_description");
+
+
+const avatarPopup = confiureFormModal("avatar-modal", updateAvatar, options);
+const avatarElement = document.querySelector(".profile__avatar");
+avatarElement.addEventListener("click", openAvatarModal);
 
 // #endregion 
 
@@ -128,7 +132,7 @@ deleteButton.addEventListener("click", deleteHandler);
 // #endregion
 
 
-// #region Edit modal methods
+// #region Edit & avatar modal methods
 
 function openEditModal() {
     fillProfileForm();
@@ -152,6 +156,21 @@ async function updateInfo(event, data) {
         name: newInfo.name,
         about: newInfo.description
     });
+}
+
+function openAvatarModal() {
+    avatarPopup.open();
+    formValidators["avatar-form"].toggleButtonState();
+}
+
+async function updateAvatar(event, data) {
+    const link = data["url-input"];
+    api.updateAvatar(link)
+        .then((res) => {
+            document.querySelector(".profile__image")
+                .setAttribute("src", res.avatar);
+        });
+    
 }
 
 // #endregion 
