@@ -6,13 +6,47 @@ import { PopupWithForm } from "../components/PopupWithForm.js";
 import { PopupWithImage } from "../components/PopupWithImage.js"; 
 import { Section } from "../components/Section.js";
 import { UserInfo } from "../components/UserInfo.js";
+import { Api } from "../components/Api.js";
 import { 
     initialCards, 
     options, 
     initialName, 
-    initialDesc 
+    initialDesc,
+    domain,
+    token,
 } from "../utils/constants.js";
 import "./index.css";
+import { Popup } from "../components/Popup.js";
+
+// #endregion
+
+// #region Profile setup
+
+const api = new Api({
+    baseUrl: domain,
+    headers: {
+      authorization: token,
+      "Content-Type": "application/json"
+    }
+  });
+
+const userInfo = new UserInfo(".profile__name", ".profile__description");
+
+setProfileInfo(".profile__image");
+
+function setProfileInfo(avatarSelector)
+{
+    api.getProfileInfo()
+        .then((res) => {
+            const userData = {
+                name: res.name,
+                description: res.about,
+            }
+            userInfo.setUserInfo(userData);
+            document.querySelector(avatarSelector)
+                .setAttribute("src", res.avatar);
+        });
+}
 
 // #endregion
 
@@ -49,8 +83,6 @@ editProfileButton.addEventListener("click", openEditModal);
 const nameInput = document.querySelector(".modal__input_type_name");
 const descInput = document.querySelector(".modal__input_type_description");
 
-const userInfo = new UserInfo(".profile__name", ".profile__description");
-
 // #endregion 
 
 // #region New place modal setup
@@ -71,19 +103,32 @@ imageModal.setEventListeners();
 
 // #region Cards rendering
 
-const cards = document.querySelector(".cards");
+// Is there a better practice for defining a global variable inside a promise resolve?
+let cardsSection = null;
 
-const cardsSection = new Section({
-    items: initialCards,
-    renderer: (data) => {
-        const card = getCardElement(data);
-        cardsSection.addItem(card);
-    }
-}, ".cards");
+api.getCards()
+    .then((res) => {
+        const cards = Array.from(res).reverse();
+        
+        cardsSection = new Section({
+            items: cards,
+            renderer: (data) => {
+                const card = getCardElement(data);
+                cardsSection.addItem(card);
+            }
+        }, ".cards");
 
-cardsSection.renderItems();
+        cardsSection.renderItems();
+    });
 
-// #endregion 
+const deletePopup = new Popup("#confirm-modal");
+deletePopup.setEventListeners();
+
+let deleteHandler = () => {};
+const deleteButton = document.querySelector("#delete-button");
+deleteButton.addEventListener("click", deleteHandler);
+
+// #endregion
 
 
 // #region Edit modal methods
@@ -109,26 +154,46 @@ function updateInfo(event, data) {
 
 // #endregion 
 
-// #region New place modal & card creation methods
+// #region New place modal & card methods
 
 function openPlaceModal() {
     formValidators["place-form"].toggleButtonState();
     placePopup.open();
 }
 
-function addCard(event, data) {
+function openConfirmModal(event, data) {
+    deletePopup.open();
+    deleteButton.removeEventListener("click", deleteHandler);
+    deleteHandler = () => {
+        deleteCard(event.target.closest(".card"), data);
+    };
+    deleteButton.addEventListener("click", deleteHandler);
+}
+
+async function addCard(event, data) {
     const cardData = {
         name: data["title-input"],
         link: data["url-input"],
     };
     cardsSection.addItem(getCardElement(cardData));
+
+    api.addCard(cardData)
+        .then();
+
     event.target.reset();
+}
+
+function deleteCard(cardElement, data) {
+    cardElement.remove();
+    api.deleteCard(data._id)
+    deletePopup.close();
 }
 
 function getCardElement(data) {
     const cardSelector = "card";
     const card = new Card(data, cardSelector,
-        () => { imageModal.open(data) });
+        () => { imageModal.open(data) },
+        (event) => { openConfirmModal(event, data) });
     const cardElement = card.generateCard();
     return cardElement;
 }

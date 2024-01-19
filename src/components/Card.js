@@ -1,8 +1,9 @@
 export class Card {
-    constructor(data, cardSelector, handleImageClick) {
+    constructor(data, cardSelector, handleImageClick, deleteHandler) {
         this._data = data;
         this._cardSelector = cardSelector;
         this._handleImageClick = handleImageClick;
+        this._deleteHandler = deleteHandler;
     }
 
     _setEventListeners() {
@@ -12,10 +13,6 @@ export class Card {
             .addEventListener("click", this._deleteHandler);
         this._element.querySelector(".card__image")
             .addEventListener("click", this._handleImageClick);
-    }
-
-    _deleteHandler(event) {
-        event.target.closest(".card").remove();
     }
 
     _likeHandler(event) {

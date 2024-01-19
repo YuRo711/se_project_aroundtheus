@@ -7,6 +7,8 @@ export class PopupWithForm extends Popup {
         this._submitHandler = submitHandler;
         this._inputFields = 
             Array.from(this.form.querySelectorAll(".modal__input"));
+        this._submitButton = this._element.querySelector(".modal__save-button");
+        this._buttonText = this._submitButton.textContent;
     }
 
     _getInputValues() {
@@ -22,8 +24,13 @@ export class PopupWithForm extends Popup {
     setEventListeners() {
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
+            this._submitButton.textContent = "Saving...";
             const inputValues = this._getInputValues();
-            this._submitHandler(event, inputValues);
+            this._submitHandler(event, inputValues)
+                .then(() => { 
+                    console.log(this._buttonText);
+                    this._submitButton.textContent = this._buttonText;
+                });
             this.close();
         });
         super.setEventListeners();

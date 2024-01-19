@@ -29,6 +29,10 @@
     padding: 34px 36px 36.51px;
 }
 
+.modal__container_type_confirm {
+    height: 181px;
+}
+
 .modal__close-button {
     background: url('../images/Close\ Icon.svg') no-repeat;
     background-size: cover;
@@ -97,6 +101,10 @@
     line-height: normal;
     cursor: pointer;
     transition: opacity 0.3s ease-in-out;
+}
+
+.modal__save-button_type_confirm {
+    margin-top: 38px;
 }
 
 .modal__save-button:hover {
