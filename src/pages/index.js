@@ -177,10 +177,12 @@ async function addCard(event, data) {
         name: data["title-input"],
         link: data["url-input"],
     };
-    cardsSection.addItem(getCardElement(cardData));
 
     api.addCard(cardData)
-        .then();
+        .then((res) => {
+            cardData._id = res._id;
+            cardsSection.addItem(getCardElement(cardData));
+        });
 
     event.target.reset();
 }
