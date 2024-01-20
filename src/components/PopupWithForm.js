@@ -27,11 +27,12 @@ export class PopupWithForm extends Popup {
             this._submitButton.textContent = "Saving...";
             const inputValues = this._getInputValues();
             this._submitHandler(event, inputValues)
-                .then(() => { 
-                    console.log(this._buttonText);
+                .then(() => {
+                    this.close();
+                })
+                .finally(() => {
                     this._submitButton.textContent = this._buttonText;
                 });
-            this.close();
         });
         super.setEventListeners();
     }

@@ -4,6 +4,7 @@ import { Card } from "../components/Card.js";
 import { FormValidator } from "../components/FormValidator.js";
 import { PopupWithForm } from "../components/PopupWithForm.js";
 import { PopupWithImage } from "../components/PopupWithImage.js"; 
+import { PopupWithConfirmation } from "../components/PopupWithConfirmation.js";
 import { Section } from "../components/Section.js";
 import { UserInfo } from "../components/UserInfo.js";
 import { Api } from "../components/Api.js";
@@ -13,7 +14,6 @@ import {
     token,
 } from "../utils/constants.js";
 import "./index.css";
-import { Popup } from "../components/Popup.js";
 
 // #endregion
 
@@ -27,7 +27,8 @@ const api = new Api({
     }
   });
 
-const userInfo = new UserInfo(".profile__name", ".profile__description");
+const userInfo = new UserInfo(".profile__name", ".profile__description", 
+    ".profile__avatar");
 
 setProfileInfo(".profile__image");
 
@@ -38,10 +39,12 @@ function setProfileInfo(avatarSelector)
             const userData = {
                 name: res.name,
                 description: res.about,
+                avatar: res.avatar,
             }
             userInfo.setUserInfo(userData);
-            document.querySelector(avatarSelector)
-                .setAttribute("src", res.avatar);
+        })
+        .catch((err) => {
+            console.log("Error loading user info: " + err);
         });
 }
 
@@ -120,14 +123,13 @@ api.getCards()
         }, ".cards");
 
         cardsSection.renderItems();
+    })
+    .catch((err) => {
+        console.log("Error loading cards: " + err);
     });
 
-const deletePopup = new Popup("#confirm-modal");
+const deletePopup = new PopupWithConfirmation("#confirm-modal", deleteCard);
 deletePopup.setEventListeners();
-
-let deleteHandler = () => {};
-const deleteButton = document.querySelector("#delete-button");
-deleteButton.addEventListener("click", deleteHandler);
 
 // #endregion
 
@@ -155,6 +157,9 @@ async function updateInfo(event, data) {
     api.editProfile({
         name: newInfo.name,
         about: newInfo.description
+    })
+    .catch((err) => {
+        console.log("Error updating user info: " + err);
     });
 }
 
@@ -165,10 +170,13 @@ function openAvatarModal() {
 
 async function updateAvatar(event, data) {
     const link = data["url-input"];
+
     api.updateAvatar(link)
         .then((res) => {
-            document.querySelector(".profile__image")
-                .setAttribute("src", res.avatar);
+            userInfo.setUserAvatar(res.avatar);
+        })
+        .catch((err) => {
+            console.log("Error updating avatar: " + err);
         });
     
 }
@@ -184,11 +192,10 @@ function openPlaceModal() {
 
 function openConfirmModal(event, data) {
     deletePopup.open();
-    deleteButton.removeEventListener("click", deleteHandler);
-    deleteHandler = () => {
-        deleteCard(event.target.closest(".card"), data);
-    };
-    deleteButton.addEventListener("click", deleteHandler);
+    deletePopup.setConfirmationData({
+        cardElement: event.target.closest(".card"),
+        data: data,
+    });
 }
 
 async function addCard(event, data) {
@@ -201,18 +208,22 @@ async function addCard(event, data) {
         .then((res) => {
             cardData._id = res._id;
             cardsSection.addItem(getCardElement(cardData));
+        })
+        .catch((err) => {
+            console.log("Error adding card: " + err);
         });
 
     event.target.reset();
 }
 
-function deleteCard(cardElement, data) {
+async function deleteCard({cardElement, data}) {
     cardElement.remove();
     api.deleteCard(data._id)
     deletePopup.close();
 }
 
-function likeCard(event, data) {
+function likeCard(event, card) {
+    const data = card.data;
     const button = event.target;
     button.classList.toggle("card__like-button_active");
     if (data.isLiked) {
@@ -229,7 +240,7 @@ function getCardElement(data) {
     const card = new Card(data, cardSelector,
         () => { imageModal.open(data) },
         (event) => { openConfirmModal(event, data) },
-        (event) => { likeCard(event, data) });
+        (event) => { likeCard(event, card) });
     const cardElement = card.generateCard();
     if (data.isLiked) {
         const likeButton = cardElement.querySelector(".card__like-button");
