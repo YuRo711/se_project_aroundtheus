@@ -19,6 +19,7 @@ export class Card {
     generateCard() {
         const cardTemplate = document.getElementById(this._cardSelector);
         this._element = cardTemplate.content.cloneNode(true);
+        this._likeButton = this._element.querySelector(".card__like-button");
 
         const name = this._data.name;
         const image = this._data.link;
@@ -30,5 +31,9 @@ export class Card {
 
         this._setEventListeners();
         return this._element;
+    }
+
+    likeCard() {
+        this._likeButton.classList.toggle("card__like-button_active");
     }
 }

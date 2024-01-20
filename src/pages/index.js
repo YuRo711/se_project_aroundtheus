@@ -175,6 +175,9 @@ async function updateAvatar(event, data) {
         .then((res) => {
             userInfo.setUserAvatar(res.avatar);
         })
+        .then(() => {
+            event.target.reset();
+        })
         .catch((err) => {
             console.log("Error updating avatar: " + err);
         });
@@ -209,28 +212,44 @@ async function addCard(event, data) {
             cardData._id = res._id;
             cardsSection.addItem(getCardElement(cardData));
         })
+        .then(() => {
+            event.target.reset();
+        })
         .catch((err) => {
-            console.log("Error adding card: " + err);
+            console.log("Error adding a card: " + err);
         });
-
-    event.target.reset();
 }
 
 async function deleteCard({cardElement, data}) {
-    cardElement.remove();
     api.deleteCard(data._id)
+        .then(() => {
+            cardElement.remove();
+        })
+        .catch((err) => {
+            console.log("Error deleting a card: " + err);
+        });
     deletePopup.close();
 }
 
 function likeCard(event, card) {
-    const data = card.data;
-    const button = event.target;
-    button.classList.toggle("card__like-button_active");
+    const data = card._data;
     if (data.isLiked) {
-        api.unlikeCard(data._id);
+        api.unlikeCard(data._id)
+            .then(() => {
+                card.likeCard();
+            })
+            .catch((err) => {
+                console.log("Error unliking a card: " + err);
+            });
         data.isLiked = false;
     } else {
-        api.likeCard(data._id);
+        api.likeCard(data._id)
+            .then(() => {
+                card.likeCard();
+            })
+            .catch((err) => {
+                console.log("Error liking a card: " + err);
+            });
         data.isLiked = true;
     }
 }
