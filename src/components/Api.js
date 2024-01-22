@@ -13,6 +13,8 @@ export class Api {
             .then((res) => {
                 if (res.ok) {
                     return res.json()
+                } else {
+                    throw "requeset gone wrong";
                 }
             });
     }

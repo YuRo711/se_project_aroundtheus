@@ -28,7 +28,7 @@ const api = new Api({
   });
 
 const userInfo = new UserInfo(".profile__name", ".profile__description", 
-    ".profile__avatar");
+    ".profile__image");
 
 setProfileInfo(".profile__image");
 
