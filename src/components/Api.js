@@ -14,7 +14,7 @@ export class Api {
                 if (res.ok) {
                     return res.json()
                 } else {
-                    throw "requeset gone wrong";
+                    return Promise.reject("something went wrong");
                 }
             });
     }

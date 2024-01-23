@@ -175,7 +175,7 @@ async function updateAvatar(event, data) {
 
     return api.updateAvatar(link)
         .then(() => {
-            userInfo.setUserAvatar(res.avatar);
+            userInfo.setUserAvatar(link);
         })
         .then(() => {
             event.target.reset();
@@ -232,27 +232,18 @@ async function deleteCard({cardElement, data}) {
         });
 }
 
-function likeCard(event, card) {
-    const data = card.data;
-    if (data.isLiked) {
-        api.unlikeCard(data._id)
-            .then(() => {
-                card.toggleLike();
-                data.isLiked = false;
-            })
-            .catch((err) => {
-                console.log("Error unliking a card: " + err);
-            });
-    } else {
-        api.likeCard(data._id)
-            .then(() => {
-                card.toggleLike();
-                data.isLiked = true;
-            })
-            .catch((err) => {
-                console.log("Error liking a card: " + err);
-            });
-    }
+async function likeCard(id) {
+    api.likeCard(id)
+        .catch((err) => {
+            console.log("Error liking a card: " + err);
+    });
+}
+
+async function unlikeCard(id) {
+    api.unlikeCard(id)
+        .catch((err) => {
+            console.log("Error liking a card: " + err);
+    });
 }
 
 function getCardElement(data) {
@@ -260,7 +251,7 @@ function getCardElement(data) {
     const card = new Card(data, cardSelector,
         () => { imageModal.open(data) },
         (event) => { openConfirmModal(event, data) },
-        (event) => { likeCard(event, card) });
+        likeCard, unlikeCard);
     const cardElement = card.generateCard();
     if (data.isLiked) {
         const likeButton = cardElement.querySelector(".card__like-button");

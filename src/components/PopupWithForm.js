@@ -24,9 +24,12 @@ export class PopupWithForm extends Popup {
     setEventListeners() {
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
+
             // This is where the button text changes. 
-            // It's only seen if the loading is slow enough for the user to notice.
+            // It's only seen if the loading is slow enough for the user to notice the change.
+            // It does change every time, though.
             this._submitButton.textContent = "Saving...";
+
             const inputValues = this._getInputValues();
             this._submitHandler(event, inputValues)
                 .then(() => {
