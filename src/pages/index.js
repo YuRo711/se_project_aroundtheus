@@ -54,7 +54,7 @@ function setProfileInfo(avatarSelector)
 
 const formValidators = {};
 
-function confiureFormModal(modalId, submitHandler, config)
+function configureFormModal(modalId, submitHandler, config)
 {
     const newPopup = new PopupWithForm(`#${modalId}`, submitHandler);
     newPopup.setEventListeners();
@@ -75,7 +75,7 @@ function enablePopupValidation(popup, config)
 
 // #region Edit profile & avatar modals setup
 
-const editPopup = confiureFormModal("edit-modal", updateInfo, options);
+const editPopup = configureFormModal("edit-modal", updateInfo, options);
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", openEditModal);
 
@@ -83,7 +83,7 @@ const nameInput = document.querySelector(".modal__input_type_name");
 const descInput = document.querySelector(".modal__input_type_description");
 
 
-const avatarPopup = confiureFormModal("avatar-modal", updateAvatar, options);
+const avatarPopup = configureFormModal("avatar-modal", updateAvatar, options);
 const avatarElement = document.querySelector(".profile__avatar");
 avatarElement.addEventListener("click", openAvatarModal);
 
@@ -91,7 +91,7 @@ avatarElement.addEventListener("click", openAvatarModal);
 
 // #region New place modal setup
 
-const placePopup = confiureFormModal("place-modal", addCard, options);
+const placePopup = configureFormModal("place-modal", addCard, options);
 
 const newPlaceButton = document.querySelector(".profile__add-button");
 newPlaceButton.addEventListener("click", openPlaceModal);
@@ -153,13 +153,15 @@ async function updateInfo(event, data) {
         name: data["name-input"],
         description: data["description-input"],
     };
-    userInfo.setUserInfo(newInfo);
     api.editProfile({
         name: newInfo.name,
         about: newInfo.description
     })
-    .catch((err) => {
-        console.log("Error updating user info: " + err);
+        .then(() => {
+            userInfo.setUserInfo(newInfo);
+        })
+        .catch((err) => {
+            console.log("Error updating user info: " + err);
     });
 }
 
@@ -171,9 +173,11 @@ function openAvatarModal() {
 async function updateAvatar(event, data) {
     const link = data["url-input"];
 
-    api.updateAvatar(link)
+    return api.updateAvatar(link)
         .then((res) => {
-            userInfo.setUserAvatar(res.avatar);
+            if (res.ok) {
+                userInfo.setUserAvatar(res.avatar);
+            }
         })
         .then(() => {
             event.target.reset();
@@ -207,10 +211,12 @@ async function addCard(event, data) {
         link: data["url-input"],
     };
 
-    api.addCard(cardData)
+    return api.addCard(cardData)
         .then((res) => {
-            cardData._id = res._id;
-            cardsSection.addItem(getCardElement(cardData));
+            if (res.ok) {
+                cardData._id = res._id;
+                cardsSection.addItem(getCardElement(cardData));
+                }
         })
         .then(() => {
             event.target.reset();
@@ -221,36 +227,35 @@ async function addCard(event, data) {
 }
 
 async function deleteCard({cardElement, data}) {
-    api.deleteCard(data._id)
+    return api.deleteCard(data._id)
         .then(() => {
             cardElement.remove();
         })
         .catch((err) => {
             console.log("Error deleting a card: " + err);
         });
-    deletePopup.close();
 }
 
 function likeCard(event, card) {
-    const data = card._data;
+    const data = card.data;
     if (data.isLiked) {
         api.unlikeCard(data._id)
             .then(() => {
-                card.likeCard();
+                card.toggleLike();
+                data.isLiked = false;
             })
             .catch((err) => {
                 console.log("Error unliking a card: " + err);
             });
-        data.isLiked = false;
     } else {
         api.likeCard(data._id)
             .then(() => {
-                card.likeCard();
+                card.toggleLike();
+                data.isLiked = true;
             })
             .catch((err) => {
                 console.log("Error liking a card: " + err);
             });
-        data.isLiked = true;
     }
 }
 
