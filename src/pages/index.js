@@ -32,7 +32,7 @@ const userInfo = new UserInfo(".profile__name", ".profile__description",
 
 setProfileInfo(".profile__image");
 
-function setProfileInfo(avatarSelector)
+function setProfileInfo()
 {
     api.getProfileInfo()
         .then((res) => {
@@ -174,10 +174,8 @@ async function updateAvatar(event, data) {
     const link = data["url-input"];
 
     return api.updateAvatar(link)
-        .then((res) => {
-            if (res.ok) {
-                userInfo.setUserAvatar(res.avatar);
-            }
+        .then(() => {
+            userInfo.setUserAvatar(res.avatar);
         })
         .then(() => {
             event.target.reset();
@@ -213,10 +211,8 @@ async function addCard(event, data) {
 
     return api.addCard(cardData)
         .then((res) => {
-            if (res.ok) {
-                cardData._id = res._id;
-                cardsSection.addItem(getCardElement(cardData));
-                }
+            cardData._id = res._id;
+            cardsSection.addItem(getCardElement(cardData));
         })
         .then(() => {
             event.target.reset();
