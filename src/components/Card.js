@@ -1,3 +1,5 @@
+import { data } from "autoprefixer";
+
 export class Card {
     constructor(data, cardSelector, handleImageClick, deleteHandler, 
             likeHandler, unlikeHandler) {
@@ -39,7 +41,6 @@ export class Card {
     generateCard() {
         const cardTemplate = document.getElementById(this._cardSelector);
         this._element = cardTemplate.content.cloneNode(true);
-        this._likeButton = this._element.querySelector(".card__like-button");
 
         const name = this._data.name;
         const image = this._data.link;
@@ -48,6 +49,11 @@ export class Card {
         cardImage.setAttribute("src", image);
         cardImage.setAttribute("alt", name);
         cardTitle.textContent = name;
+
+        this._likeButton = this._element.querySelector(".card__like-button");
+        if (data.isLiked) {
+            this._toggleLike();
+        }
 
         this._setEventListeners();
         return this._element;
