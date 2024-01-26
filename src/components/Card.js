@@ -1,5 +1,3 @@
-import { data } from "autoprefixer";
-
 export class Card {
     constructor(data, cardSelector, handleImageClick, deleteHandler, 
             likeHandler, unlikeHandler) {
@@ -51,7 +49,7 @@ export class Card {
         cardTitle.textContent = name;
 
         this._likeButton = this._element.querySelector(".card__like-button");
-        if (data.isLiked) {
+        if (this._data.isLiked) {
             this._toggleLike();
         }
 
