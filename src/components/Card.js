@@ -2,6 +2,7 @@ export class Card {
     constructor(data, cardSelector, handleImageClick, deleteHandler, 
             likeHandler, unlikeHandler) {
         this._data = data;
+        this.id = data._id;
         this._cardSelector = cardSelector;
         this._handleImageClick = handleImageClick;
         this._deleteHandler = deleteHandler;
@@ -20,19 +21,13 @@ export class Card {
 
     _likeCard() {
         if (this._data.isLiked) {
-            this._unlikeHandler(this._data._id)
-                .then(() => {
-                    this._toggleLike();
-            });
+            this._unlikeHandler(this);
         } else {
-            this._likeHandler(this._data._id)
-                .then(() => {
-                    this._toggleLike();
-            });
+            this._likeHandler(this);
         }
     }
 
-    _toggleLike() {
+    toggleLike() {
         this._likeButton.classList.toggle("card__like-button_active");
     }
 
@@ -50,7 +45,7 @@ export class Card {
 
         this._likeButton = this._element.querySelector(".card__like-button");
         if (this._data.isLiked) {
-            this._toggleLike();
+            this.toggleLike();
         }
 
         this._setEventListeners();

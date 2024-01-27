@@ -153,7 +153,7 @@ async function updateInfo(event, data) {
         name: data["name-input"],
         description: data["description-input"],
     };
-    api.editProfile({
+    return api.editProfile({
         name: newInfo.name,
         about: newInfo.description
     })
@@ -232,15 +232,21 @@ async function deleteCard({cardElement, data}) {
         });
 }
 
-async function likeCard(id) {
-    api.likeCard(id)
+async function likeCard(card) {
+    api.likeCard(card.id)
+        .then(() => {
+            card.toggleLike();
+        })
         .catch((err) => {
             console.log("Error liking a card: " + err);
     });
 }
 
-async function unlikeCard(id) {
-    api.unlikeCard(id)
+async function unlikeCard(card) {
+    api.unlikeCard(card.id)
+        .then(() => {
+            card.toggleLike();
+        })
         .catch((err) => {
             console.log("Error liking a card: " + err);
     });
@@ -253,10 +259,6 @@ function getCardElement(data) {
         (event) => { openConfirmModal(event, data) },
         likeCard, unlikeCard);
     const cardElement = card.generateCard();
-    if (data.isLiked) {
-        const likeButton = cardElement.querySelector(".card__like-button");
-        likeButton.classList.toggle("card__like-button_active");
-    }
     return cardElement;
 }
 
