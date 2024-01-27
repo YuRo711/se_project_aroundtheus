@@ -7,6 +7,8 @@ export class PopupWithForm extends Popup {
         this._submitHandler = submitHandler;
         this._inputFields = 
             Array.from(this.form.querySelectorAll(".modal__input"));
+        this._submitButton = this._element.querySelector(".modal__save-button");
+        this._buttonText = this._submitButton.textContent;
     }
 
     _getInputValues() {
@@ -22,9 +24,20 @@ export class PopupWithForm extends Popup {
     setEventListeners() {
         this.form.addEventListener("submit", (event) => {
             event.preventDefault();
+
+            // This is where the button text changes. 
+            // It's only seen if the loading is slow enough for the user to notice the change.
+            // It does change every time, though.
+            this._submitButton.textContent = "Saving...";
+
             const inputValues = this._getInputValues();
-            this._submitHandler(event, inputValues);
-            this.close();
+            this._submitHandler(event, inputValues)
+                .then(() => {
+                    this.close();
+                })
+                .finally(() => {
+                    this._submitButton.textContent = this._buttonText;
+                });
         });
         super.setEventListeners();
     }

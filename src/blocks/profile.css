@@ -10,12 +10,31 @@
     border-radius: 50%;
     overflow: hidden;
     display: flex;
+    position: relative;
     justify-content: center;
 }
 
 .profile__image {
-    width: 168.75px;
     height: 127.5px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile__avatar:hover .profile__image {
+    opacity: 0.2;
+}
+
+.profile__avatar-edit-icon {
+    position: absolute;
+    top: 50px;
+    width: 26px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.profile__avatar:hover .profile__avatar-edit-icon {
+    opacity: 1;
 }
 
 .profile__info {
