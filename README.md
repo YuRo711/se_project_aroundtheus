@@ -12,6 +12,8 @@ This project is made so all the elements are displayed correctly on popular scre
 
 **Project features**
 
+- REST API
+- Asynchronous JavaScript
 - Semantic HTML5
 - Flexbox
 - Grid
